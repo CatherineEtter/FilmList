@@ -1,0 +1,8 @@
+/*This is the main CSS file*/
+html,body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: #FFF;
+    background-size: cover;
+}
