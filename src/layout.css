@@ -6,3 +6,26 @@ html,body {
     background-color: #FFF;
     background-size: cover;
 }
+#header {
+    height: 150px;
+    margin: 0px;
+    background-color: #AAA;
+}
+/**** Nav-Bar ****/
+.navbar{
+    border-top: 3px solid black;
+    border-bottom: 3px solid black;
+}
+#nav-wrapper ul li a:hover {
+    color: #eee;
+    background-color: rgba(0,0,0,.2);
+    cursor: pointer;
+   
+}
+#nav-wrapper a {
+    color: #000;
+    text-decoration: none;
+}
+.active {
+    background-color: rgba(0,0,0,.7);
+}

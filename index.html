@@ -9,15 +9,32 @@
         <!--Api stuff. Find more at https://developers.google.com/speed/libraries/#jquery-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="src/filmlist.js"></script>
     </head>
     <body>
         <div id="header-wrapper" >
             <header id="header" class="jumbotron text-center">
                 <h1>FilmList</h1>
             </header>
-            <div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div id="nav-wrapper" class="container-fluid">
+                    <ul class="nav navbar-nav">
+                        <li class="nav-item"><a onclick="loadBrowse()" class="nav-opt" id="nav-browse">Browse</a></li>
+                        <li class="nav-item"><a onclick="loadCatalog()" class="nav-opt" id="nav-catalog">Catalog</a></li>
+                        <li class="nav-item"><a onclick="loadMovieQueue()" class="nav-opt" id="nav-moviequeue">Movie Queue</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <div id="content-wrapper" class="container-fluid">
                 <h3>Initial index.html file.</h3>
             </div>
         </div>
+        
     </body>
 </html>
+<script>
+    //Executes when website is first loaded
+    if($(".active").length <= 0) {
+        loadBrowse();
+    }
+</script>
