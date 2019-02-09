@@ -8,20 +8,22 @@
         <link rel="stylesheet" href="src/layout.css" type="text/css">
         <!--Api stuff. Find more at https://developers.google.com/speed/libraries/#jquery-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script type="text/javascript" src="src/filmlist.js"></script>
     </head>
     <body>
         <div id="header-wrapper" >
             <header id="header" class="jumbotron text-center">
-                <h1>FilmList</h1>
+                <!--TODO: Combine title and logo in a single image-->
+                <h1 class="logo"><a href="index.html"><img src="images/logo.png" width="90" height="53" alt="logo" /></a> <span class="alt-logo">Film List</span></h1>
             </header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div id="nav-wrapper" class="container-fluid">
                     <ul class="nav navbar-nav">
                         <li class="nav-item"><a onclick="loadBrowse()" class="nav-opt" id="nav-browse">Browse</a></li>
                         <li class="nav-item"><a onclick="loadCatalog()" class="nav-opt" id="nav-catalog">Catalog</a></li>
-                        <li class="nav-item"><a onclick="loadMovieQueue()" class="nav-opt" id="nav-moviequeue">Movie Queue</a></li>
+                        <li class="nav-item"><a onclick="loadMovieQueue()" class="nav-opt" id="nav-moviequeue">Queue</a></li>
                     </ul>
                 </div>
             </nav>
