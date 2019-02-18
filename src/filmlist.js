@@ -13,3 +13,9 @@ function loadMovieQueue() {
     $(".nav-opt").removeClass("active");
     $("#nav-moviequeue").addClass("active");
 }
+function openLoginForm() {
+    $("#login-wrapper").removeAttr("hidden");
+}
+function closeLoginForm() {
+    $("#login-wrapper").attr("hidden",true);
+}
