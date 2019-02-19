@@ -6,11 +6,19 @@ html,body {
     background-color: #FFF;
     background-size: cover;
 }
+body {
+    height: 100%;
+    min-height: 100vh;
+}
 #header {
     height: 150px;
     margin: 0px;
     color: #FFF;
-    background-color: #000;
+    background-color: #282828;
+}
+.content-wrapper{
+    height: 100%;
+    min-height: 100vh;
 }
 /*** Nav-Bar ***/
 .navbar{
@@ -59,3 +67,21 @@ html,body {
     max-width: 400px;
     background-color: rgba(255,255,255,.9);
 }
+/*** Browser/index ***/
+#browser-wrapper {
+    background: url("../images/theater.jpg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.search-wrapper {
+    position: relative;
+    padding: 0px;
+}
+/*
+.search-wrapper img{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}*/
