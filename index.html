@@ -38,20 +38,36 @@
                     <img src="images/logo.png" width="300">
                     <h1>Login</h1>
                 </div>
-                <div class="container">
+                <div id="loginbox_div" class="container">
                     <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Username" name="username" >
+                        <input class="form-control" type="text" placeholder="Username" name="username" id="user_field" >
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="password" placeholder="Password" name="password">
+                        <input class="form-control" type="password" placeholder="Password" name="password" id="pass_field">
                     </div>
-                    <button class="btn btn-success" type="submit">Login</button>
+                    <button class="btn btn-success" onclick="submit">Login</button>
                     <button class="btn btn-secondary" onclick="closeLoginForm()">Bypass (Debug)</button>
                 </div>
             </form>
         </div>
     </body>
 </html>
+
+<script src="https://www.gstatic.com/firebasejs/5.8.3/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: ":^)",
+    authDomain: "movieproject-9d83d.firebaseapp.com",
+    databaseURL: "https://movieproject-9d83d.firebaseio.com",
+    projectId: "movieproject-9d83d",
+    storageBucket: "movieproject-9d83d.appspot.com",
+    messagingSenderId: "721138716237"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="login.js"></script>
+
 <script>
     //Executes when website is first loaded
     if($(".active").length <= 0) {
