@@ -5,9 +5,6 @@ html,body {
     text-align: center;
     background-color: #FFF;
     background-size: cover;
-}
-body {
-    height: 100%;
     min-height: 100vh;
 }
 #header {
@@ -78,10 +75,31 @@ body {
 .search-wrapper {
     position: relative;
     padding: 0px;
+    margin: 0px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    width: 100%;
 }
-/*
-.search-wrapper img{
+.search-wrapper input{
+    border-radius: 8px 0 0 8px;
+    border: 4px solid #282828;
+    padding: 5px;
+    min-width: 300px;
+    width: 60%;
+}
+.search-wrapper button{
+    border-radius: 0 8px 8px 0;
+    border: 4px solid #282828;
+    background-color: #282828;
+    border-left: 0px;
+    height: 63px;
+}
+#footer {
     position: absolute;
-    top: 0px;
-    left: 0px;
-}*/
+    bottom: 0;
+    width: 100%;
+    color: #F8F8FF;
+    background-color: rgba(0,0,0,.4);
+}
