@@ -6,6 +6,7 @@ html,body {
     background-color: #FFF;
     background-size: cover;
     min-height: 100vh;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 #header {
     height: 150px;
@@ -19,28 +20,42 @@ html,body {
 }
 /*** Nav-Bar ***/
 .navbar{
+    font-family: "Arial Black", Gadget, sans-serif;
     display: block;
+    padding: 0;
     border-top: 3px solid black;
     border-bottom: 3px solid black;
 }
+#nav-wrapper {
+    height: 100%;
+    margin: 0;
+    background-color: #e0e0e0;
+}
 #nav-wrapper ul li a:hover {
     color: #eee;
-    background-color: rgba(0,0,0,.2);
+    /*background-color: rgba(0,0,0,.2);*/
+    background-color: #5bc5fa;
+    margin: 0;
+    height: 100%;
     cursor: pointer;
-   
+}
+#nav-wrapper ul {
+    height: 100%;
 }
 #nav-wrapper ul li{
     height: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
-    color: red;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 #nav-wrapper a {
-    display: block;
+    height: 100%;
     color: #000;
+    padding: 10px;
+    display: block;
     text-decoration: none;
 }
 .active {
+    /*color: #5bc5fa;*/
     background-color: rgba(0,0,0,.7);
 }
 /*** Login Form ***/
