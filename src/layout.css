@@ -5,37 +5,57 @@ html,body {
     text-align: center;
     background-color: #FFF;
     background-size: cover;
+    min-height: 100vh;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 #header {
     height: 150px;
     margin: 0px;
     color: #FFF;
-    background-color: #000;
+    background-color: #282828;
+}
+.content-wrapper{
+    height: 100%;
+    min-height: 100vh;
 }
 /*** Nav-Bar ***/
 .navbar{
+    font-family: "Arial Black", Gadget, sans-serif;
     display: block;
+    padding: 0;
     border-top: 3px solid black;
     border-bottom: 3px solid black;
 }
+#nav-wrapper {
+    height: 100%;
+    margin: 0;
+    background-color: #e0e0e0;
+}
 #nav-wrapper ul li a:hover {
     color: #eee;
-    background-color: rgba(0,0,0,.2);
+    /*background-color: rgba(0,0,0,.2);*/
+    background-color: #5bc5fa;
+    margin: 0;
+    height: 100%;
     cursor: pointer;
-   
+}
+#nav-wrapper ul {
+    height: 100%;
 }
 #nav-wrapper ul li{
     height: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
-    color: red;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 #nav-wrapper a {
-    display: block;
+    height: 100%;
     color: #000;
+    padding: 10px;
+    display: block;
     text-decoration: none;
 }
 .active {
+    /*color: #5bc5fa;*/
     background-color: rgba(0,0,0,.7);
 }
 /*** Login Form ***/
@@ -58,4 +78,43 @@ html,body {
     padding: 10px;
     max-width: 400px;
     background-color: rgba(255,255,255,.9);
+}
+/*** Browser/index ***/
+#browser-wrapper {
+    background: url("../images/theater.jpg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.search-wrapper {
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    width: 100%;
+}
+.search-wrapper input{
+    border-radius: 8px 0 0 8px;
+    border: 4px solid #282828;
+    padding: 5px;
+    min-width: 300px;
+    width: 60%;
+}
+.search-wrapper button{
+    border-radius: 0 8px 8px 0;
+    border: 4px solid #282828;
+    background-color: #282828;
+    border-left: 0px;
+    height: 63px;
+}
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: #F8F8FF;
+    background-color: rgba(0,0,0,.4);
 }
