@@ -135,8 +135,12 @@ html,body {
     background-color: #5bc5fa;
 }
 #movie-filter-box {
-    
+    padding: 10px;
+    background-color: #cecece;
 }
+/*#movie-filter-box form-group{
+width: 40%;
+}*/
 #footer {
     position: absolute;
     bottom: 0;

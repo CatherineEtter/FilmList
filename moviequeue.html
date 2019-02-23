@@ -37,6 +37,39 @@
             </nav>
         </div>
         <div class="content-wrapper">
+            <div id="filter-search-wrapper">
+                <div class="search-wrapper">
+                <input type="text" name="movie-search" placeholder="Enter movie title..." id="searchbar">
+                <!--TODO: Replace "Search" with a search icon instead-->
+                <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i></button>
+                </div>
+                <button id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button> 
+                <div id="movie-filter-box" class="collapse">
+                    <form>
+                        <div class="form-group">
+                            <label for="rating-input">Rating</label>
+                            <input id="rating-input" type="number" name="" min="1" max="10">
+                            <label for="actor-input">Actor</label>
+                            <input id="actor-input" type="text" name="">
+                            <label for="director-input">Director</label>
+                            <input id="director-input" type="text" name="">
+                        </div>
+                        <div class="form-group">
+                            <label for="genre-select">Genres</label>
+                            <select multiple id="genre-select" class="form-control">
+                                <option>Action</option>
+                                <option>Adventure</option>
+                                <option>Comedy</option>
+                                <option>Drama</option>
+                                <option>Horror</option>
+                                <option>Sci-Fi</option>
+                                <option>Western</option>
+                            </select>
+                        </div>
+                    </form>
+                    <button type="submit" class="btn btn-secondary">Filter</button>
+                </div>
+            </div>
         	<h1>Movie Queue Placeholder</h1>
         </div>
     </body>
