@@ -10,6 +10,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <script type="text/javascript" src="src/filmlist.js"></script>
     </head>
     <body>
@@ -28,15 +29,23 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
-                            <!-- <button class="btn" onclick="openLoginForm()">Login (Debug)</button> -->
+                            <button class="btn" onclick="openLoginForm()">Login</button>
                             <button class="btn">Logout</button>
                         </div>
                     </div>
                 </div>
             </nav>
         </div>
-        <div class="content-wrapper">
-        	<h1>Catalog Placeholder</h1>
+        <div id="catalog-wrapper" class="content-wrapper">
+            <div class="search-wrapper">
+                <input type="text" name="movie-search" placeholder="Enter movie title..." id="searchbar">
+                <!--TODO: Replace "Search" with a search icon instead-->
+                <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i></button>
+            </div>
+            <button id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button> 
+            <div id="movie-filter-box" class="collapse">
+                <p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderi</p>
+            </div>
         </div>
     </body>
 </html>
