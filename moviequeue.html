@@ -12,6 +12,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
         <script type="text/javascript" src="src/filmlist.js"></script>
     </head>
     <body>
@@ -30,7 +32,7 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
-                            <!-- <button class="btn" onclick="openLoginForm()">Login (Debug)</button> -->
+                            <button class="btn" onclick="openLoginForm()">Login</button>
                             <button class="btn">Logout</button>
                         </div>
                     </div>
@@ -38,6 +40,39 @@
             </nav>
         </div>
         <div class="content-wrapper">
+            <div id="filter-search-wrapper">
+                <div class="search-wrapper">
+                <input type="text" name="movie-search" placeholder="Enter movie title..." id="searchbar">
+                <!--TODO: Replace "Search" with a search icon instead-->
+                <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i></button>
+                </div>
+                <button id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button> 
+                <div id="movie-filter-box" class="collapse">
+                    <form>
+                        <div class="form-group">
+                            <label for="rating-input">Rating</label>
+                            <input id="rating-input" type="number" name="" min="1" max="10">
+                            <label for="actor-input">Actor</label>
+                            <input id="actor-input" type="text" name="">
+                            <label for="director-input">Director</label>
+                            <input id="director-input" type="text" name="">
+                        </div>
+                        <div class="form-group">
+                            <label for="genre-select">Genres</label>
+                            <select multiple id="genre-select" class="form-control">
+                                <option>Action</option>
+                                <option>Adventure</option>
+                                <option>Comedy</option>
+                                <option>Drama</option>
+                                <option>Horror</option>
+                                <option>Sci-Fi</option>
+                                <option>Western</option>
+                            </select>
+                        </div>
+                    </form>
+                    <button type="submit" class="btn btn-secondary">Filter</button>
+                </div>
+            </div>
         	<h1>Movie Queue Placeholder</h1>
         </div>
     </body>

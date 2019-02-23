@@ -87,30 +87,60 @@ html,body {
     justify-content: center;
     align-items: center;
 }
+/*** Search Fields ***/
 .search-wrapper {
     position: relative;
-    padding: 0px;
+    padding: 10px;
     margin: 0px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    font-size: 30px;
+    font-size: 15px;
     width: 100%;
+    border-bottom: 8px solid #5bc5fa;
+    background-color: #141414;
+}
+#browser-wrapper .search-wrapper {
+    font-size: 30px;
+    border: 0;
+    background-color: transparent;
 }
 .search-wrapper input{
-    border-radius: 8px 0 0 8px;
-    border: 4px solid #282828;
     padding: 5px;
     min-width: 300px;
     width: 60%;
 }
+#browser-wrapper .search-wrapper input{
+    border-radius: 8px 0 0 8px;
+    border: 4px solid #282828;
+}
 .search-wrapper button{
     border-radius: 0 8px 8px 0;
+    /*border: 4px solid #fa9f00;*/
+    background-color: #fa9f00;
+    border-left: 0px;
+}
+#browser-wrapper .search-wrapper button{
+    height: 63px;
     border: 4px solid #282828;
     background-color: #282828;
-    border-left: 0px;
-    height: 63px;
 }
+/*** FIlter ***/
+#btn-collapse-filter {
+    width: 30%;
+    padding: 0px;
+    color: black;
+    border: 0;
+    margin: 0px;
+    background-color: #5bc5fa;
+}
+#movie-filter-box {
+    padding: 10px;
+    background-color: #cecece;
+}
+/*#movie-filter-box form-group{
+width: 40%;
+}*/
 #footer {
     position: absolute;
     bottom: 0;
