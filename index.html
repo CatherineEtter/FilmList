@@ -11,6 +11,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script type="text/javascript" src="src/filmlist.js"></script>
+        <script type="text/javascript" src="src/omdb.js"></script>
     </head>
     <body>
         <div class="header-wrapper">
@@ -37,14 +38,23 @@
         </div>
         <div id="browser-wrapper" class="content-wrapper">
             <div class="search-wrapper">
-                <input type="text" name="movie-search" placeholder="Enter movie title..." id="searchbar">
-                <!--TODO: Replace "Search" with a search icon instead-->
-                <button type="submit" class="btn btn-secondary">Search</button>
+                <form id="search-form" onsubmit="return false;">
+                    <!--name of 's' eases serialization into a query parameter-->
+                    <input type="text" name="s" id="movie-search" placeholder="Enter movie title..." id="searchbar">
+                    <!--TODO: Replace "Search" with a search icon instead-->
+                    <button id="search-button" type="button" class="btn btn-secondary" onclick="searchForMovie();">Search</button>
+                    <div id="search-error"></div>
+                    <div id="search-results"></div>
+                    <div id="search-progress" class="hide progress progress-info progress-striped active">
+                        <div class="progress-bar" style="width: 100%;">
+                        </div>
+                    </div>
+                </form>
             </div>   
             <!-- <div class="btn btn-primary" onclick="openLoginForm()">Open login box (Debug)</div> -->
             <div id="footer">
                 <p>St. Mary's University Software Engineering Project, Spring 2019</p>
-                <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya</p>
+                <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
             </div>
         </div>
         <!--Yes, the password is displayed in the URL-->

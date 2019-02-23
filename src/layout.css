@@ -118,3 +118,7 @@ html,body {
     color: #F8F8FF;
     background-color: rgba(0,0,0,.4);
 }
+/*simple class to hide elements*/
+.hide {
+    display: none;
+}
