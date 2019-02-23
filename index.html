@@ -11,6 +11,10 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <script type="text/javascript" src="src/filmlist.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+        <script type="text/javascript" src="src/register.js"></script>
+        <script type="text/javascript" src="src/login.js"></script
     </head>
     <body>
         <div class="header-wrapper">
@@ -29,6 +33,7 @@
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
                             <button class="btn" onclick="openLoginForm()">Login (Debug)</button>
+                            <button class="btn" onclick="openRegisterForm()">Register</button>
                             <button class="btn">Logout</button>
                         </div>
                     </div>
@@ -47,7 +52,7 @@
                 <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya</p>
             </div>
         </div>
-        <!--Yes, the password is displayed in the URL-->
+        
         <div class="form-popup" id="login-wrapper" hidden>
             <form class="form-container">
                 <div class="container">
@@ -56,16 +61,39 @@
                 </div>
                 <div class="container">
                     <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Username" name="username" >
+                        <input class="form-control" type="text" placeholder="Username" name="username" id="emailInput">
                     </div>
                     <div class="form-group">
-                        <input class="form-control" type="password" placeholder="Password" name="password">
+                        <input class="form-control" type="password" placeholder="Password" name="password" id="passwordInput">
                     </div>
-                    <button class="btn btn-success" type="submit">Register</button>
-                    <button class="btn btn-success" type="submit">Login</button>
-                    <button class="btn btn-secondary" onclick="closeLoginForm()">Close (Debug)</button>
+                    <button class="btn btn-success" type="submit" onclick="loginUser()">Login</button>
+                    <button class="btn btn-secondary" onclick="closeLoginForm()">Close</button>
                 </div>
             </form>
         </div>
+        
+        <div class="form-popup" id="register-wrapper" hidden>
+            <!-- changed form tag to div tag to keep page from refreshing (only did it for testing) -->
+            <form class="form-container">
+                <div class="container">
+                    <img src="images/logo.png" width="300">
+                    <h1>Login</h1>
+                </div>
+                <div class="container">
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Username" name="username" id="user_field">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Enter Your Password" name="password" id="pass_field1">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Enter Password Again" name="password" id="pass_field2">
+                    </div>
+                    <button class="btn btn-success" type="submit" onclick="RegisterForm()">Register</button>
+                    <button class="btn btn-secondary" onclick="closeRegisterForm()">Close</button>
+                </div>
+            </form>
+        </div>
+        
     </body>
 </html>
