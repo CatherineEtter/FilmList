@@ -50,7 +50,20 @@
                     <!--TODO: Replace "Search" with a search icon instead-->
                     <button id="search-button" type="button" class="btn btn-secondary" onclick="searchForMovie();"><i class="fas fa-search"></i></button>
                     <div id="search-error"></div>
-                    <div id="search-results"></div>
+                    <div id="search-results-wrapper">
+                        <table id="search-results" class="hide">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Image</th>
+                                    <th>Year</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                     <div id="search-progress" class="hide progress progress-info progress-striped active">
                         <div class="progress-bar" style="width: 100%;">
                         </div>
