@@ -1,21 +1,10 @@
-  var config = {
-     apiKey: "Hidden",
-     authDomain: "movieproject-9d83d.firebaseapp.com",
-     databaseURL: "https://movieproject-9d83d.firebaseio.com",
-     projectId: "movieproject-9d83d",
-     storageBucket: "movieproject-9d83d.appspot.com",
-     messagingSenderId: "721138716237"
-   };
-firebase.initializeApp(config);
-
-
-function RegisterForm(){
+function registerForm(){
     var password1;
     var password2;
     var email;
-    email = document.getElementById("user_field").value;
-    password1 = document.getElementById("pass_field1").value;
-    password2 = document.getElementById("pass_field2").value;
+    email = document.getElementById("emailInput1").value;
+    password1 = document.getElementById("passwordInput1").value;
+    password2 = document.getElementById("passwordInput2").value;
 
     if (password1 == password2) {
         
