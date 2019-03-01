@@ -9,6 +9,8 @@
    };
 firebase.initializeApp(config);
 
+var firebaseUser;
+
 function loginUser() {
     var email = document.getElementById("emailInput").value
     var password = document.getElementById("passwordInput").value
@@ -18,3 +20,26 @@ function loginUser() {
         window.confirm("ERROR: " + error);
     });
 }
+
+// A user has the following properties:
+// displayName
+// email
+// photoUrl
+// emailVerified
+// uid
+// getToken
+
+firebase.auth().onAuthStateChanged(function(user) {
+    if(user) { 
+        //User is signed in
+        console.log("Current User: " + user);
+        firebaseUser = firebase.auth().currentUser;
+        console.log("displayName: " + firebaseUser.displayName);
+        console.log("email: " + firebaseUser.email);
+        console.log("photoUrl: " + firebaseUser.photoUrl);
+        console.log("emailVerified: " + firebaseUser.emailVerified);
+        console.log("uid: " + firebaseUser.uid);
+    } else  {
+        //No user is signed in
+    }
+})
