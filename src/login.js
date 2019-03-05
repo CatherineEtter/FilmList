@@ -1,3 +1,4 @@
+ // Initialize Firebase
 function loginUser() {
     var email = document.getElementById("emailInput").value
     var password = document.getElementById("passwordInput").value
@@ -8,4 +9,9 @@ function loginUser() {
     });
     
     window.alert("The login function is working!")
+
+    if (firebase.auth().currentUser !== null) {
+      console.log("user id: " + firebase.auth().currentUser.uid);
+    }
+       
 }
