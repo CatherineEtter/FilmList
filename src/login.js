@@ -1,4 +1,7 @@
+<<<<<<< HEAD
  // Initialize Firebase
+=======
+>>>>>>> master
 function loginUser() {
     var email = document.getElementById("emailInput").value
     var password = document.getElementById("passwordInput").value
