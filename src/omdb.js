@@ -1,7 +1,10 @@
 /* enables searching of movies from OMDb */
 
-var endpoint = 'http://www.omdbapi.com/?';
+var endpoint = 'http://www.omdbapi.com/';
 var apiKey = 'd0507337';
+
+//TODO current 32x44 is too small
+var DEFAULT_MOVIE_IMAGE = 'https://m.media-amazon.com/images/G/01/imdb/images/nopicture/32x44/film-3119741174._CB483525279_.png';
 
 //height for poster is optional
 function getMoviePoster(tid,height) {
@@ -26,11 +29,6 @@ function searchForMovie() {
     //disable search button while searching occurs
     $(searchButton).prop('disabled', true);
 
-    //TODO add 'type=movie' to search
-
-    //serialize the user's input to send over the wire
-    var searchParams = $("#search-form :input").serialize();
-    
     //clear out existing search errors
     var searchError = $('#search-error');
     searchError.addClass('hide');
@@ -42,12 +40,34 @@ function searchForMovie() {
     //clear previous search results
     searchResults.children('tbody').empty();
 
+    //search term
+    var searchTerm = $('#movie-search').val();
+
+    if(searchTerm === '') {
+        //TODO notify empty search
+        return;
+    }
+
+    //data to include in the search
+    var dataHash = {};
+    //limit to movies (no tv, etc)
+    dataHash['type']='movie';
+    //movie name
+    dataHash['s']=searchTerm;
+    //key allowing API access
+    dataHash['apikey']=apiKey;
+
+    
+    //display search term
+    $("#search-term").text('Results for: ' + $('#movie-search').val());
+
     //TODO implement a progress indicator
 
     $.ajax({
         //method: 'GET',
         //dataType: 'json',
-        url: endpoint + searchParams + '&apikey='+apiKey,
+        url: endpoint,
+        data: dataHash,
         statusCode: {
             401: function () {
                 searchError.html("Error: Daily request limit reached!");
@@ -70,29 +90,40 @@ function onSearchResponse(data) {
 
         //table containing search results
         var searchResults = $("#search-results");
-        
+
         var tbody = searchResults.children("tbody");
 
         $.each(data.Search, function(rowIndex, movieInfo) {
-            console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
+            //console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
 
-            var row = $("<tr>").appendTo(tbody);
+            //create a row per matched movie
+            var row = $("<tr>").addClass("search-result").appendTo(tbody);
 
-            row.append($("<td>").text(movieInfo.Title));
+            //first is to display the image
+            var imageSource = DEFAULT_MOVIE_IMAGE;
 
-            //TODO default image for those with none?
-            if(movieInfo.Poster === 'N/A') {
-                row.append($("<td>"));
-            } else {
-                row.append($("<td>")
-                    .append(
-                        $("<img>").attr('src', movieInfo.Poster)
-                    )
-                );
+            //default size is 300, only do this if an image was provided
+            if(movieInfo.Poster !== 'N/A') {
+                imageSource = resizeImageTo(movieInfo.Poster, 100);
             }
-            row.append($("<td>").text(movieInfo.Year));
-            row.append($("<td>").append($("<button>").text("Details")));
-            row.append($("<td>").text("Actions"));
+            
+            //add image to the row
+            row.append($("<td>").addClass("primary-photo")
+                .append(
+                    $("<img>").attr('src', imageSource)
+                )
+            );
+
+            //second is to display movie info
+            var detailsLink = $("<a>");
+            //TODO implement details display on click
+            detailsLink.attr('href', "javascript:void(0);");
+            detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + " )");
+            //add movie info to row
+            row.append($("<td>").append(detailsLink));
+
+            //create a starter button for Catherine to use
+            row.append($("<td>").append($("<button>").addClass('btn-search-result-action').text("Add/Remove")));
         });
 
         searchResults.removeClass('hide');
@@ -103,8 +134,13 @@ function onSearchResponse(data) {
     }
 }
 
+//this only works for images originating via OMDB
+function resizeImageTo(src, height) {
+    return src.replace('SX300','SX'+height);
+}
+
 /*
-An example search response
+An example search response for term "Spiderman"
 
 {"Search":[{"Title":"Italian Spiderman","Year":"2007","imdbID":"tt2705436","Type":"movie",
 "Poster":"https://m.media-amazon.com/images/M/MV5BYjFhN2RjZTctMzA2Ni00NzE2LWJmYjMtNDAyYTllOTkyMmY3XkEyXkFqcGdeQXVyNTA0OTU0OTQ@._V1_SX300.jpg"},
@@ -118,5 +154,6 @@ An example search response
 {"Title":"The Amazing Spiderman T4 Premiere Special","Year":"2012","imdbID":"tt2233044","Type":"movie","Poster":"N/A"},
 {"Title":"Amazing Spiderman Syndrome","Year":"2012","imdbID":"tt2586634","Type":"movie","Poster":"N/A"},
 {"Title":"Hollywood's Master Storytellers: Spiderman Live","Year":"2006","imdbID":"tt2158533","Type":"movie","Poster":"N/A"},
-{"Title":"Spiderman 5","Year":"2008","imdbID":"tt3696826","Type":"movie","Poster":"N/A"}],"totalResults":"13","Response":"True"}
+{"Title":"Spiderman 5","Year":"2008","imdbID":"tt3696826","Type":"movie","Poster":"N/A"}],
+"totalResults":"13","Response":"True"}
 */

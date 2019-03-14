@@ -62,18 +62,10 @@
                     <input type="text" name="s" id="movie-search" placeholder="Enter movie title...">
                     <!--TODO: Replace "Search" with a search icon instead-->
                     <button id="search-button" type="button" class="btn btn-secondary" onclick="searchForMovie();"><i class="fas fa-search"></i></button>
+                    <div id="search-term"></div>
                     <div id="search-error"></div>
                     <div id="search-results-wrapper">
-                        <table id="search-results" class="hide">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Image</th>
-                                    <th>Year</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
+                        <table id="search-results" class="stripe hide">
                             <tbody></tbody>
                         </table>
                     </div>
@@ -82,14 +74,12 @@
                         </div>
                     </div>
                 </form>
-            </div>   
-            <!-- <div class="btn btn-primary" onclick="openLoginForm()">Open login box (Debug)</div> -->
+            </div>
             <div id="footer">
                 <p>St. Mary's University Software Engineering Project, Spring 2019</p>
                 <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
             </div>
         </div>
-        
         <div class="form-popup" id="login-wrapper" hidden>
             <div class="form-container">
                 <div class="container">
@@ -108,7 +98,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="form-popup" id="register-wrapper" hidden>
             <!-- changed form tag to div tag to keep page from refreshing (only did it for testing) -->
             <form class="form-container">
@@ -131,6 +120,5 @@
                 </div>
             </form>
         </div>
-        
     </body>
 </html>
