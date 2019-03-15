@@ -123,7 +123,12 @@ function onSearchResponse(data) {
             row.append($("<td>").append(detailsLink));
 
             //create a starter button for Catherine to use
-            row.append($("<td>").append($("<button>").addClass('btn-search-result-action').text("Add/Remove")));
+            var btn = $("<button>").addClass('btn-search-result-action').text("Add/Remove");
+            btn.attr('data-imdb-id', movieInfo.imdbID);
+            btn.on('click', function () {
+                alert("TODO: display details for movie " + $(this).attr('data-imdb-id'));
+            });
+            row.append($("<td>").append(btn));
         });
 
         searchResults.removeClass('hide');
