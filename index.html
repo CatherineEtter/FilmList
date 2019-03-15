@@ -58,15 +58,21 @@
         <div id="browser-wrapper" class="content-wrapper">
             <div class="search-wrapper">
                 <form id="search-form" onsubmit="return false;">
-                    <!--name of 's' eases serialization into a query parameter-->
-                    <input type="text" name="s" id="movie-search" placeholder="Enter movie title...">
-                    <!--TODO: Replace "Search" with a search icon instead-->
-                    <button id="search-button" type="button" class="btn btn-secondary" onclick="searchForMovie();"><i class="fas fa-search"></i></button>
+                    <input type="text" id="movie-search" placeholder="Enter movie title...">
+                    <button id="search-button" type="button" class="btn btn-secondary" onclick="newMovieSearch();"><i class="fas fa-search"></i></button>
                     <div id="search-term"></div>
                     <div id="search-error"></div>
                     <div id="search-results-wrapper">
                         <table id="search-results" class="stripe hide">
                             <tbody></tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan='3' id="search-footer-data">
+                                        Displaying <div id="current-count">0</div> of <div id="total-count">0</div>
+                                        <a id="moreLink" href="javascript:void(0);">More</a>.
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                     <div id="search-progress" class="hide progress progress-info progress-striped active">
@@ -75,11 +81,11 @@
                     </div>
                 </form>
             </div>
-            <div id="footer">
-                <p>St. Mary's University Software Engineering Project, Spring 2019</p>
-                <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
-            </div>
         </div>
+        <footer id="footer">
+            <p>St. Mary's University Software Engineering Project, Spring 2019</p>
+            <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
+        </footer>
         <div class="form-popup" id="login-wrapper" hidden>
             <div class="form-container">
                 <div class="container">

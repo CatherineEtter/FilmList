@@ -24,22 +24,7 @@ function getMovieDetails(tid, callback) {
     };
 }
 
-function searchForMovie() {
-    var searchButton = $("search-button");
-    //disable search button while searching occurs
-    $(searchButton).prop('disabled', true);
-
-    //clear out existing search errors
-    var searchError = $('#search-error');
-    searchError.addClass('hide');
-    searchError.html('');
-
-    //hide the search results and clear its contents
-    var searchResults = $('#search-results');
-    searchResults.addClass('hide');
-    //clear previous search results
-    searchResults.children('tbody').empty();
-
+function newMovieSearch() {
     //search term
     var searchTerm = $('#movie-search').val();
 
@@ -48,18 +33,44 @@ function searchForMovie() {
         return;
     }
 
-    //data to include in the search
-    var dataHash = {};
+    //data to include in the search request
+    var searchParams = {};
     //limit to movies (no tv, etc)
-    dataHash['type']='movie';
+    searchParams['type']='movie';
     //movie name
-    dataHash['s']=searchTerm;
+    searchParams['s']=searchTerm;
+    //pull set #1 of search results
+    searchParams['page']=1;
     //key allowing API access
-    dataHash['apikey']=apiKey;
+    searchParams['apikey']=apiKey;
 
-    
+    searchForMovie(searchParams, true);
+}
+
+function searchForMovie(searchParams, isNewSearch) {
+    var searchButton = $("search-button");
+    //disable search button while searching occurs
+    $(searchButton).prop('disabled', true);
+
+    var searchError = $('#search-error');
+
+    if(isNewSearch) {
+        //clear out existing search errors
+        searchError.addClass('hide');
+        searchError.html('');
+
+        //hide the search results and clear its contents
+        var searchResults = $('#search-results');
+        searchResults.addClass('hide');
+        //clear previous search results
+        searchResults.children('tbody').empty();
+        resetFooter();
+        //clear previous paging info
+        //searchResults.children('tfoot').empty();
+    }
+
     //display search term
-    $("#search-term").text('Results for: ' + $('#movie-search').val());
+    $("#search-term").text('Results for: ' + searchParams['s']);
 
     //TODO implement a progress indicator
 
@@ -67,13 +78,15 @@ function searchForMovie() {
         //method: 'GET',
         //dataType: 'json',
         url: endpoint,
-        data: dataHash,
+        data: searchParams,
         statusCode: {
             401: function () {
                 searchError.html("Error: Daily request limit reached!");
             }
         },
-        success: onSearchResponse,
+        success: function(data) {
+            onMovieSearchResponse(data, searchParams);
+        },
         complete: function () {
             //progress.hide();
             //re-enable search button
@@ -83,10 +96,9 @@ function searchForMovie() {
     });
 }
 
-function onSearchResponse(data) {
+function onMovieSearchResponse(data, searchParams) {
     if(data.Response && data.Response === "True") {
-        //TODO implement paging with 'page' param and storing vars in table
-        console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
+        //console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
 
         //table containing search results
         var searchResults = $("#search-results");
@@ -107,29 +119,31 @@ function onSearchResponse(data) {
                 imageSource = resizeImageTo(movieInfo.Poster, 100);
             }
             
-            //add image to the row
+            //add a movie poster image
             row.append($("<td>").addClass("primary-photo")
                 .append(
                     $("<img>").attr('src', imageSource)
                 )
             );
 
-            //second is to display movie info
+            //add a details link with basic movie info as the text
             var detailsLink = $("<a>");
             //TODO implement details display on click
             detailsLink.attr('href', "javascript:void(0);");
-            detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + " )");
+            detailsLink.on('click', function() {
+                displayMovieDetails(this, movieInfo.imdbID);
+            });
+            detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
             //add movie info to row
-            row.append($("<td>").append(detailsLink));
+            row.append($("<td>").addClass("basic-movie-info").append(detailsLink));
 
-            //create a starter button for Catherine to use
+            //add a starter button for Catherine to extend as she sees fit
             var btn = $("<button>").addClass('btn-search-result-action').text("Add/Remove");
             btn.attr('data-imdb-id', movieInfo.imdbID);
-            btn.on('click', function () {
-                alert("TODO: display details for movie " + $(this).attr('data-imdb-id'));
-            });
             row.append($("<td>").append(btn));
         });
+
+        updateFooter(data, searchParams);
 
         searchResults.removeClass('hide');
     } else {
@@ -139,13 +153,161 @@ function onSearchResponse(data) {
     }
 }
 
+//reset count stats
+function resetFooter() {
+    $('#current-count').text(0);
+    $('#total-count').text(0);
+}
+
+//display count stats and option to pull back more search results
+function updateFooter(data, searchParams) {
+    var returnedCount = data.Search.length;
+    var totalSearchResultsCount = parseInt(data.totalResults);
+
+    //display current count by adding to previous
+    var cc = $('#current-count');
+    var displayedCount = returnedCount + parseInt(cc.text());
+    cc.text(displayedCount);
+    
+    //display total count
+    $('#total-count').text(totalSearchResultsCount);
+
+    var moreLink = $("#moreLink");
+
+    //remove previous click listeners
+    moreLink.off('click');
+
+    if(displayedCount < totalSearchResultsCount) {
+        moreLink.removeClass("hide");
+
+        //update "page" param so we return the next set of results
+        searchParams['page'] = 1+parseInt(searchParams['page']);
+
+        moreLink.on('click', function() {
+            searchForMovie(searchParams, false);
+        });
+    } else {
+        moreLink.addClass("hide");
+    }
+}
+
+function displayMovieDetails(el, imdbId) {
+    //alert("Displaying details for movie " + imdbId);
+
+    var link = $(el);
+
+    //disable clicked link while searching occurs
+    link.prop('disabled', true);
+
+    var searchParams = {};
+    searchParams['i']=imdbId;
+    searchParams['plot']='full';
+    searchParams['apikey']=apiKey;
+
+    $.ajax({
+        //method: 'GET',
+        //dataType: 'json',
+        url: endpoint,
+        data: searchParams,
+        statusCode: {
+            401: function () {
+                //TODO do something else
+                alert("Error: Failed to get movie details for " + imdbId);
+            }
+        },
+        success: function(data) {
+            onMovieDetailsResponse(data, el);
+        },
+        complete: function () {
+            //re-enable clicked link
+            link.prop('disabled', false);
+        }
+    });
+}
+
+function onMovieDetailsResponse(data, el) {
+    //TODO check for Response='true'
+
+
+
+    console.log(data);
+    //this is the link that was clicked
+    var link = $(el);
+    //parent TD containing the link
+    //var parent = link.parent();
+
+    //create a new table to display the detailed movie data
+    var table = $("<table id='movie-details-table'>");
+    var tbody = $("<tbody>").appendTo(table);
+
+    //director
+    var row = $("<tr>").appendTo(tbody);
+    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("Director:"));
+    $("<td>").appendTo(row).append($('<p>').text(data.Director));
+
+    //actors
+    row = $("<tr>").appendTo(tbody);
+    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("Actors:"));
+    $("<td>").appendTo(row).append($('<p>').text(data.Actors));
+
+    //imdb rating
+    row = $("<tr>").appendTo(tbody);
+    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("IMDB Rating:"));
+    $("<td>").appendTo(row).append($('<p>').text(data.imdbRating));
+
+    //R | 1h 32min | Action, Drama, Thriller | 15 October 2004 (USA)
+    /*
+    row = $("<tr>").appendTo(tbody);
+    var td = $("<td colspan='2'>").appendTo(row);
+    td.append($('<p>').text(data.Rated));
+    td.append($('<span class="ghost">').text("|"));
+    td.append($('<p>').text(data.Runtime));
+    td.append($('<span class="ghost">').text("|"));
+    td.append($('<p>').text(data.Genre));
+    td.append($('<span class="ghost">').text("|"));
+    td.append($('<p>').text(data.Released + " (" + data.Country + ")"));
+    */
+
+    /*
+    pull from here - https://www.imdb.com/title/tt0397537/?ref_=fn_tt_tt_8
+    <div class="ratings_wrapper">
+        <div class="imdbRating" itemtype="http://schema.org/AggregateRating" itemscope="" itemprop="aggregateRating">
+            <div class="ratingValue">
+                <span itemprop="ratingValue">5.7</span>
+                <span class="grey">/</span>
+                <span class="grey" itemprop="bestRating">10</span>
+            </div>
+            <a href="https://www.imdb.com/title/tt0397537/ratings?ref_=tt_ov_rt"><span class="small" itemprop="ratingCount">445</span></a>
+        </div>
+        <div id="star-rating-widget" class="star-rating-widget">
+            <div class="star-rating-button">
+                <button>
+                    <span class="star-rating-star no-rating"></span>
+                    <span class="star-rating-text">Rate This</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    */
+
+    //plot
+    row = $("<tr>").appendTo(tbody);
+    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("Plot:"));
+    $("<td>").appendTo(row).append($('<p>').text(data.Plot));
+
+    table.appendTo(link.parent());
+}
+
 //this only works for images originating via OMDB
-function resizeImageTo(src, height) {
-    return src.replace('SX300','SX'+height);
+function resizeImageTo(src, newHeight   ) {
+    //match the dot to avoid small chance of other portion existing twice within the filename
+    return src.replace('SX300.','SX'+newHeight+'.');
 }
 
 /*
 An example search response for term "Spiderman"
+
+http://www.omdbapi.com/?type=movie&s=spiderman&page=1&apikey=d0507337
 
 {"Search":[{"Title":"Italian Spiderman","Year":"2007","imdbID":"tt2705436","Type":"movie",
 "Poster":"https://m.media-amazon.com/images/M/MV5BYjFhN2RjZTctMzA2Ni00NzE2LWJmYjMtNDAyYTllOTkyMmY3XkEyXkFqcGdeQXVyNTA0OTU0OTQ@._V1_SX300.jpg"},
@@ -161,4 +323,22 @@ An example search response for term "Spiderman"
 {"Title":"Hollywood's Master Storytellers: Spiderman Live","Year":"2006","imdbID":"tt2158533","Type":"movie","Poster":"N/A"},
 {"Title":"Spiderman 5","Year":"2008","imdbID":"tt3696826","Type":"movie","Poster":"N/A"}],
 "totalResults":"13","Response":"True"}
+*/
+
+/*
+Example response containing detailed plot for movie ID tt2705436
+
+http://www.omdbapi.com/?i=tt2705436&plot=full
+
+{"Title":"Italian Spiderman","Year":"2007","Rated":"N/A","Released":"08 Nov 2007",
+"Runtime":"40 min","Genre":"Short, Action, Comedy","Director":"Dario Russo",
+"Writer":"Dario Russo, David Ashby, Tait Wilson, Will Spartalis, Boris Repasky",
+"Actors":"David Ashby, Chris Asimos, Anna Cashman, Michael Crisci",
+"Plot":"Have you ever wondered what would happen if an Italian producer took quaaludes, stumbled into a theater, and saw the first 5 minutes of spider man 2? Well worry no more because Italian Spider-Man is here to haunt your dreams with meteors, snake men, and macchiatos. Let's do it PussyCat!",
+"Language":"English, Italian","Country":"Australia","Awards":"N/A",
+"Poster":"https://m.media-amazon.com/images/M/MV5BYjFhN2RjZTctMzA2Ni00NzE2LWJmYjMtNDAyYTllOTkyMmY3XkEyXkFqcGdeQXVyNTA0OTU0OTQ@._V1_SX300.jpg",
+"Ratings":[{"Source":"Internet Movie Database","Value":"8.0/10"}],
+"Metascore":"N/A","imdbRating":"8.0","imdbVotes":"726","imdbID":"tt2705436",
+"Type":"movie","DVD":"N/A","BoxOffice":"N/A","Production":"N/A","Website":"N/A",
+"Response":"True"}
 */

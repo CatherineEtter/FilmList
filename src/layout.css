@@ -142,10 +142,8 @@ html,body {
 width: 40%;
 }*/
 #footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    color: #F8F8FF;
+    color:  #F8F8FF;
     background-color: rgba(0,0,0,.4);
 }
 /*simple class to hide elements*/
@@ -166,4 +164,14 @@ width: 40%;
 .stripe > tbody > tr:nth-child(odd),
 .stripe--nested > tbody > tr:nth-child(4n+1) {
   background-color: #cccccc;
+}
+
+.basic-movie-info {
+    text-align: left;
+    font-size: 14px;
+    /*padding-left: 1em*/
+}
+
+.movie-details-key {
+    vertical-align: top;
 }
