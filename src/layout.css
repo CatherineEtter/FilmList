@@ -152,3 +152,18 @@ width: 40%;
 .hide {
     display: none;
 }
+/*
+  instead of adding 'even' and 'odd' to every <tr> tag, just add <table class="stripe">...</table>
+  use 'stripe--nested' for tables that have expanding rows of details. Must have a thead around <th> tags
+*/
+.even,
+.stripe > tbody > tr:nth-child(even), 
+.stripe--nested > tbody > tr:nth-child(4n-1) {
+  background-color: #eeeeee;
+}
+
+.odd,
+.stripe > tbody > tr:nth-child(odd),
+.stripe--nested > tbody > tr:nth-child(4n+1) {
+  background-color: #cccccc;
+}

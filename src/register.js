@@ -1,14 +1,3 @@
-  var config = {
-     apiKey: "Hidden",
-     authDomain: "movieproject-9d83d.firebaseapp.com",
-     databaseURL: "https://movieproject-9d83d.firebaseio.com",
-     projectId: "movieproject-9d83d",
-     storageBucket: "movieproject-9d83d.appspot.com",
-     messagingSenderId: "721138716237"
-   };
-firebase.initializeApp(config);
-
-
 function RegisterForm(){
     var password1;
     var password2;
