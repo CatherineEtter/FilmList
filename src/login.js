@@ -15,6 +15,7 @@ function logoutUser() {
     firebase.auth().signOut().then(function() {
         console.log("Successfully signed user out");
         window.alert("You have been signed out.");
+        location.reload();
     }, function(error) {
         console.log("Error signing out user: " + error);
     })
