@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>FilmList</title>
-        <!--Bootstrap-->
+    <!--Bootstrap-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
         <!--Custom Stylesheet-->
         <link rel="stylesheet" href="src/layout.css" type="text/css">
@@ -26,8 +26,11 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
         <script type="text/javascript" src="src/filmlist.js"></script>
-        <script type="text/javascript" src="src/catalog.js"></script>
+<!--                <script type="text/javascript" src="src/register.js"></script>-->
+        <script type="text/javascript" src="src/login.js"></script>
+        <script type="text/javascript" src="src/account.js"></script>
     </head>
     <body>
         <div class="header-wrapper">
@@ -39,55 +42,50 @@
                 <div id="nav-wrapper" class="container-fluid">
                     <ul class="nav navbar-nav">
                         <li class="nav-item"><a href="index.html" class="nav-opt" id="nav-browse">Browse</a></li>
-                        <li class="nav-item active"><a href="catalog.html" class="nav-opt" id="nav-catalog">Catalog</a></li>
+                        <li class="nav-item"><a href="catalog.html" class="nav-opt" id="nav-catalog">Catalog</a></li>
                         <li class="nav-item"><a href="moviequeue.html" class="nav-opt" id="nav-moviequeue">Queue</a></li>
                     </ul>
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
                             <button class="btn" onclick="openLoginForm()">Login</button>
-                            <button class="btn">Logout</button>
+                            <button class="btn" onclick="openRegisterForm()">Register</button>
+                            <button class="btn" onClick="logoutUser()">Logout</button>
+                            <button class="btn"><a href="account.html" id="nav-manageAccount">Manage</a></button>
                         </div>
                     </div>
                 </div>
             </nav>
         </div>
-        <div id="catalog-wrapper" class="content-wrapper">
-            <div id="filter-search-wrapper">
-                <div class="search-wrapper">
-                <input type="text" name="movie-search" placeholder="Enter movie title..." id="searchbar">
-                <!--TODO: Replace "Search" with a search icon instead-->
-                <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i></button>
-                </div>
-                <button id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button> 
-                <div id="movie-filter-box" class="collapse">
-                    <form>
-                        <div class="form-group">
-                            <label for="rating-input">Rating</label>
-                            <input id="rating-input" type="number" name="" min="1" max="10">
-                            <label for="actor-input">Actor</label>
-                            <input id="actor-input" type="text" name="">
-                            <label for="director-input">Director</label>
-                            <input id="director-input" type="text" name="">
-                        </div>
-                        <div class="form-group">
-                            <label for="genre-select">Genres</label>
-                            <select multiple id="genre-select" class="form-control">
-                                <option>Action</option>
-                                <option>Adventure</option>
-                                <option>Comedy</option>
-                                <option>Drama</option>
-                                <option>Horror</option>
-                                <option>Sci-Fi</option>
-                                <option>Western</option>
-                            </select>
-                        </div>
-                    </form>
-                    <button type="submit" class="btn btn-secondary">Filter</button>
-                </div>
-            </div>
-            <button class="btn" onclick="testAuth()">TEST AUTH</button>
-            <button class="btn" onclick="getCatalog()">LOAD CATALOG</button>
+        <div class="account-details-wrapper">
+            <br>
+            <h3 id="nameHeader"></h3><br>
+            <button id="imageButton" onclick="changeImage()"><img height="200" width="200" id="profileIcon" src=""></button>
+            <br>
+            <br>
+            <p>Favorite Genre: <input type="text"> <button id="genreButton">Submit</button></p>
+<!--            <label id="birthdayLabel">Birth Date: </label><br>-->
+            <button id="changePasswordButton" onClick="openChangePassword()">Change Password</button><br>
+            <button id="logoutButton" onClick="logoutUser()">Logout</button>
+            <br><br>
         </div>
+        
+    <div class="form-popup" id="changePasswordWrapper" hidden>
+        <form class="formContainer">
+            <div class="container">
+                <h1>Change Password</h1>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Enter a new password" name="New Password" id="passwordField1">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Confirm the new password" name="Confirm" id="passwordField2">
+                </div>
+                <button class="btn btn-success" id="submitNewPasswordButton" type="submit" onClick="changePassword()">Submit</button>
+                <button class="btn btn-secondary" id="cancelNewPassword" onClick="closeChangePassword()">Cancel</button>
+            </div>
+        </form>
+    </div>
     </body>
 </html>
