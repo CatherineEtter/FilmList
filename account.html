@@ -66,6 +66,7 @@
             <p>Favorite Genre: <input type="text"> <button id="genreButton">Submit</button></p>
 <!--            <label id="birthdayLabel">Birth Date: </label><br>-->
             <button id="changePasswordButton" onClick="openChangePassword()">Change Password</button><br>
+            <button id="resetPasswordButton" onClick="openResetPassword()">Reset Password</button><br>
             <button id="logoutButton" onClick="logoutUser()">Logout</button>
             <br><br>
         </div>
@@ -82,10 +83,29 @@
                 <div class="form-group">
                     <input class="form-control" type="password" placeholder="Confirm the new password" name="Confirm" id="passwordField2">
                 </div>
-                <button class="btn btn-success" id="submitNewPasswordButton" type="submit" onClick="changePassword()">Submit</button>
-                <button class="btn btn-secondary" id="cancelNewPassword" onClick="closeChangePassword()">Cancel</button>
+                <button class="btn btn-success" id="submitNewPasswordButton" type="submit" onclick="changePassword()">Submit</button>
+                <button class="btn btn-secondary" id="cancelNewPassword" onclick="closeChangePassword()">Cancel</button>
             </div>
         </form>
     </div>
+        
+        
+    <div class="form-popup" id="resetPasswordWrapper" hidden>
+        <div class="formContainer">
+            <div class="container">
+                <h1>Reset Password</h1>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <input class="form-control" type="email" placeholder="Enter your email" name="Email please" id="emailField1">
+                </div>
+                <button class="btn btn-success" id="submitNewResetButton" type="submit" onclick="resetPassword()">Submit</button>
+                <button class="btn btn-secondary" id="cancelNewReset" onclick="closeResetPassword()">Cancel</button>
+            </div>
+        </div>
+    </div>
+        
+        
+        
     </body>
 </html>
