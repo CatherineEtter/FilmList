@@ -84,8 +84,8 @@ function searchForMovie(searchParams, isNewSearch) {
                 searchError.html("Error: Daily request limit reached!");
             }
         },
-        success: function(data) {
-            onMovieSearchResponse(data, searchParams);
+        success: function(returnedData) {
+            onMovieSearchResponse(returnedData, searchParams);
         },
         complete: function () {
             //progress.hide();
@@ -139,7 +139,8 @@ function onMovieSearchResponse(data, searchParams) {
 
             //add a starter button for Catherine to extend as she sees fit
             var btn = $("<button>").addClass('btn-search-result-action').text("Add/Remove");
-            btn.attr('data-imdb-id', movieInfo.imdbID);
+            btn.attr('data-imdb', JSON.stringify(movieInfo));
+            btn.attr('onclick', "addToCatalog(this)");
             row.append($("<td>").append(btn));
         });
 
@@ -342,3 +343,13 @@ http://www.omdbapi.com/?i=tt2705436&plot=full
 "Type":"movie","DVD":"N/A","BoxOffice":"N/A","Production":"N/A","Website":"N/A",
 "Response":"True"}
 */
+
+function addToCatalog(button){
+    console.log(button.getAttribute("data-imdb"));
+    var data = JSON.parse(button.getAttribute("data-imdb"));
+    var db = firebase.firestore();
+    var users = db.collection("users");
+    users.doc(""+firebase.auth().currentUser.uid).update({
+        catalog: firebase.firestore.FieldValue.arrayUnion(data)
+    });
+}
