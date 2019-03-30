@@ -4,7 +4,7 @@ var currUser = firebase.auth().currentUser;
 firebase.auth().onAuthStateChanged(function(user) {
     if(user) { 
         //User is signed in
-        console.log("Current User: " + user);
+        console.log("Current User (Account.js): " + user);
         firebaseUser = firebase.auth().currentUser;
         console.log("displayName: " + firebaseUser.displayName);
         console.log("email: " + firebaseUser.email);
@@ -76,4 +76,31 @@ function changePassword() {
     } else {
         return;
     }
+}
+
+
+
+function openResetPassword() {
+    $("#resetPasswordWrapper").removeAttr("hidden");
+}
+
+function closeResetPassword() {
+    $("#resetPasswordWrapper").attr("hidden", true);
+}
+
+
+
+
+function resetPassword()  {
+    var auth = firebase.auth();
+    var emailAddress = document.getElementById("emailField1").value;
+
+    auth.sendPasswordResetEmail(emailAddress).then(function() {
+        console.log("Password reset Successful");
+}).catch(function(error) {
+        console.log("Password reset Failed: " + error); 
+
+});
+    
+    
 }
