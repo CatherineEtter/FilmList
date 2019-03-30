@@ -1,5 +1,4 @@
 /* enables searching of movies from OMDb */
-var keyValue = {};
 var endpoint = 'http://www.omdbapi.com/';
 var apiKey = 'd0507337';
 
