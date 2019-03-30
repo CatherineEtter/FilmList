@@ -142,9 +142,36 @@ html,body {
 width: 40%;
 }*/
 #footer {
-    position: absolute;
-    bottom: 0;
     width: 100%;
-    color: #F8F8FF;
+    color:  #F8F8FF;
     background-color: rgba(0,0,0,.4);
+}
+/*simple class to hide elements*/
+.hide {
+    display: none;
+}
+/*
+  instead of adding 'even' and 'odd' to every <tr> tag, just add <table class="stripe">...</table>
+  use 'stripe--nested' for tables that have expanding rows of details. Must have a thead around <th> tags
+*/
+.even,
+.stripe > tbody > tr:nth-child(even), 
+.stripe--nested > tbody > tr:nth-child(4n-1) {
+  background-color: #eeeeee;
+}
+
+.odd,
+.stripe > tbody > tr:nth-child(odd),
+.stripe--nested > tbody > tr:nth-child(4n+1) {
+  background-color: #cccccc;
+}
+
+.basic-movie-info {
+    text-align: left;
+    font-size: 14px;
+    /*padding-left: 1em*/
+}
+
+.movie-details-key {
+    vertical-align: top;
 }
