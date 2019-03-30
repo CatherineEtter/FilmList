@@ -159,7 +159,7 @@ function onMovieSearchResponse(data, searchParams) {
             row.append($("<td>").addClass("basic-movie-info").append(detailsLink));
 
             //add a starter button for Catherine to extend as she sees fit
-            var btn = $("<button>").addClass('btn-search-result-action').text("Add/Remove");
+            var btn = $("<button>").addClass('btn btn-primary btn-search-result-action').text("Add/Remove");
             btn.attr('data-imdb-id', movieInfo.imdbID);
             row.append($("<td>").append(btn));
         });

@@ -4,9 +4,10 @@ html,body {
     padding: 0;
     text-align: center;
     background-color: #FFF;
-    background-size: cover;
     min-height: 100vh;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    background: url("../images/theater.jpg") no-repeat center center fixed;
+    background-size: cover;
 }
 #header {
     height: 150px;
@@ -81,11 +82,12 @@ html,body {
 }
 /*** Browser/index ***/
 #browser-wrapper {
-    background: url("../images/theater.jpg") no-repeat center center fixed;
+    /**background: url("../images/theater.jpg") no-repeat center center fixed;*/
     background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
 }
 /*** Search Fields ***/
 .search-wrapper {
@@ -110,22 +112,22 @@ html,body {
     min-width: 300px;
     width: 60%;
 }
-#browser-wrapper .search-wrapper input{
+#browser-wrapper .search-wrapper input {
     border-radius: 8px 0 0 8px;
     border: 4px solid #282828;
 }
-.search-wrapper button{
+.search-wrapper #search-button {
     border-radius: 0 8px 8px 0;
     /*border: 4px solid #fa9f00;*/
     background-color: #fa9f00;
     border-left: 0px;
 }
-#browser-wrapper .search-wrapper button{
+#browser-wrapper .search-wrapper button {
     height: 63px;
     border: 4px solid #282828;
     background-color: #282828;
 }
-/*** FIlter ***/
+/*** Filter ***/
 #btn-collapse-filter {
     width: 30%;
     padding: 0px;
