@@ -1,5 +1,5 @@
 /* enables searching of movies from OMDb */
-
+var keyValue = {};
 var endpoint = 'http://www.omdbapi.com/';
 var apiKey = 'd0507337';
 
@@ -105,9 +105,9 @@ function onMovieSearchResponse(data, searchParams) {
 
         var tbody = searchResults.children("tbody");
 
+        //Data holds all the movies (max 10) in the response and then iterates through each movie
         $.each(data.Search, function(rowIndex, movieInfo) {
             //console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
-
             //create a row per matched movie
             var row = $("<tr>").addClass("search-result").appendTo(tbody);
 
@@ -126,15 +126,37 @@ function onMovieSearchResponse(data, searchParams) {
                 )
             );
 
+
             //add a details link with basic movie info as the text
             var detailsLink = $("<a>");
             //TODO implement details display on click
             detailsLink.attr('href', "javascript:void(0);");
+
+
+            //Display movie details when clicking on title and remove them when clicking again
+            //TODO: Make details dissapear when clicking on the link again
             detailsLink.on('click', function() {
-                displayMovieDetails(this, movieInfo.imdbID);
+                //movieInfo.push({"TestID","TestValue"});
+                console.log(movieInfo);
+                var parent = $(this).parent();
+                //If the user didn't already expand movie details
+                if(!parent.hasClass("movie-details-are-expanded")) {
+                    displayMovieDetails(this, movieInfo.imdbID); //this = link that was clicked
+                    parent.addClass("movie-details-are-expanded");
+                }
+                /*
+                else {
+                    console.log(parent.getElementsByTagName("table"));
+                    //parent.removeChild(parent.childNodes.item("#movie-details-table"));
+                    //parent.removeClass("movie-details-are-expanded");
+                }
+                */
+                //this.parent.addClass("movie-details-expanded")
+                
+                
             });
             detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
-            //add movie info to row
+            //add movie info to row (ONLY CONTAINS TITLE AS OF NOW)
             row.append($("<td>").addClass("basic-movie-info").append(detailsLink));
 
             //add a starter button for Catherine to extend as she sees fit
@@ -191,6 +213,7 @@ function updateFooter(data, searchParams) {
     }
 }
 
+//Makes call to OMDB to get movie details, el is the object of the link that was clicked
 function displayMovieDetails(el, imdbId) {
     //alert("Displaying details for movie " + imdbId);
 
@@ -225,6 +248,7 @@ function displayMovieDetails(el, imdbId) {
     });
 }
 
+//Adds movie details to the parent table of the link (el) that was clicked
 function onMovieDetailsResponse(data, el) {
     //TODO check for Response='true'
 
