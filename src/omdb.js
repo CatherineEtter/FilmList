@@ -130,11 +130,20 @@ function onMovieSearchResponse(data, searchParams) {
             detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
             row.append($("<td class='basic-movie-info v-align-top'>").append($("<div>").append(detailsLink)));
 
-            //thirdly, add a starter button for Catherine to extend as she sees fit
-            var btn = $("<button>").addClass('btn-search-result-action').text("Add/Remove");
-            btn.attr('data-imdb', JSON.stringify(movieInfo));
-            btn.attr('onclick', "addToCatalog(this)");
-            row.append($("<td>").append(btn));
+            //thirdly, add buttons for catalog and queue
+            var movieInfoAsString = JSON.stringify(movieInfo);
+            var catalogBtn = $("<button class='btn-search-result-action'>").text("Add to Catalog");
+            catalogBtn.attr('data-imdb', movieInfoAsString);
+            catalogBtn.attr('onclick', "addToCatalog(this); false;");
+
+            var btnData = $("<td>").append(catalogBtn);
+            
+            var queueBtn = $("<button class='btn-search-result-action'>").text("Add to Queue");
+            queueBtn.attr('data-imdb', movieInfoAsString);
+            queueBtn.attr('onclick', "addToQueue(this); false;");
+            btnData.append(queueBtn);
+            
+            row.append(btnData);
         });
 
         //update paging info to table footer
@@ -324,14 +333,38 @@ function resizeImageTo(src, newHeight) {
 }
 
 //adds the specified movie to the user's catalog
-function addToCatalog(button){
+function addToCatalog(el){
     //console.log(button.getAttribute("data-imdb"));
-    var data = JSON.parse(button.getAttribute("data-imdb"));
+    var data = JSON.parse(el.getAttribute("data-imdb"));
     var db = firebase.firestore();
     var users = db.collection("users");
-    users.doc(""+firebase.auth().currentUser.uid).update({
-        catalog: firebase.firestore.FieldValue.arrayUnion(data)
+    var docId = ""+firebase.auth().currentUser.uid;
+    users.doc(docId).get().then(function(doc) {
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+            doc.update({
+                catalog: firebase.firestore.FieldValue.arrayUnion(data)
+            });
+        } else {
+            console.log("No such document, creating default");
+            users.doc(docId).set({
+                catalog: data
+            });
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
     });
+}
+
+function removeFromCatalog(el) {
+    console.log("TODO: removing from catalog");
+}
+
+function addToQueue(el) {
+    console.log("TODO: adding to queue");
+}
+function removeFromQueue(el) {
+    console.log("TODO: removing from queue");
 }
 
 /*

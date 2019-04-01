@@ -1,134 +1,149 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>FilmList</title>
-        <!--Bootstrap-->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-        <!-- jquery UI -->
-        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-        <!--Custom Stylesheet-->
-        <link rel="stylesheet" href="src/layout.css" type="text/css">
-        <!--Api stuff-->
-        <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
-        <script type="text/javascript">
-             // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyB9Y2j70ctBMQc-GlbkvGkU5pIwlTM3RJ0",
-                authDomain: "movieproject-9d83d.firebaseapp.com",
-                databaseURL: "https://movieproject-9d83d.firebaseio.com",
-                projectId: "movieproject-9d83d",
-                storageBucket: "movieproject-9d83d.appspot.com",
-                messagingSenderId: "721138716237"
-            };
-            firebase.initializeApp(config);
-        </script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-        <script type="text/javascript" src="src/filmlist.js"></script>
-        <script type="text/javascript" src="src/register.js"></script>
-        <script type="text/javascript" src="src/login.js"></script>
-        <script type="text/javascript" src="src/omdb.js"></script>
-    </head>
-    <body>
-        <div class="header-wrapper">
-            <header id="header" class="jumbotron jumbotron-fluid text-center">
-                <!--TODO: Combine title and logo in a single image-->
-                <h1 class="logo"><a href="index.html"><img src="images/logo.png" width="90" height="53" alt="logo" /></a> <span class="alt-logo">Film List</span></h1>
-            </header>
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div id="nav-wrapper" class="container-fluid">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item active"><a href="index.html" class="nav-opt" id="nav-browse">Browse</a></li>
-                        <li class="nav-item"><a href="catalog.html" class="nav-opt" id="nav-catalog">Catalog</a></li>
-                        <li class="nav-item"><a href="moviequeue.html" class="nav-opt" id="nav-moviequeue">Queue</a></li>
-                    </ul>
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
-                        <div class="dropdown-menu">
-                            <button class="btn" onclick="openLoginForm()">Login</button>
-                            <button class="btn" onclick="openRegisterForm()">Register</button>
-                            <button class="btn" onClick="logoutUser()">Logout</button>
-                            <button class="btn"><a href="account.html" id="nav-manageAccount">Manage</a></button>
-                        </div>
+
+<head>
+    <title>FilmList</title>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <!-- jquery UI -->
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <!--Custom Stylesheet-->
+    <link rel="stylesheet" href="src/layout.css" type="text/css">
+    <!--Api stuff-->
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
+    <script type="text/javascript">
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyB9Y2j70ctBMQc-GlbkvGkU5pIwlTM3RJ0",
+            authDomain: "movieproject-9d83d.firebaseapp.com",
+            databaseURL: "https://movieproject-9d83d.firebaseio.com",
+            projectId: "movieproject-9d83d",
+            storageBucket: "movieproject-9d83d.appspot.com",
+            messagingSenderId: "721138716237"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script type="text/javascript" src="src/filmlist.js"></script>
+    <script type="text/javascript" src="src/register.js"></script>
+    <script type="text/javascript" src="src/login.js"></script>
+    <script type="text/javascript" src="src/account.js"></script>
+    <script type="text/javascript" src="src/omdb.js"></script>
+</head>
+
+<body>
+    <div class="header-wrapper">
+        <header id="header" class="jumbotron jumbotron-fluid text-center">
+            <!--TODO: Combine title and logo in a single image-->
+            <h1 class="logo"><a href="index.html"><img src="images/logo.png" width="90" height="53" alt="logo" /></a>
+                <span class="alt-logo">Film List</span></h1>
+        </header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div id="nav-wrapper" class="container-fluid">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item active"><a href="index.html" class="nav-opt" id="nav-browse">Browse</a></li>
+                    <li class="nav-item"><a href="catalog.html" class="nav-opt" id="nav-catalog">Catalog</a></li>
+                    <li class="nav-item"><a href="moviequeue.html" class="nav-opt" id="nav-moviequeue">Queue</a></li>
+                </ul>
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
+                    <div class="dropdown-menu">
+                        <button class="btn" onclick="openLoginForm()">Login</button>
+                        <button class="btn" onclick="openRegisterForm()">Register</button>
+                        <button class="btn" onClick="logoutUser()">Logout</button>
+                        <button class="btn"><a href="account.html" id="nav-manageAccount">Manage</a></button>
                     </div>
                 </div>
-            </nav>
-        </div>
-        <div id="browser-wrapper" class="content-wrapper">
-            <div class="search-wrapper">
-                <form id="search-form" onsubmit="return false;">
-                    <input type="text" id="movie-search" placeholder="Enter movie title...">
-                    <button id="search-button" type="button" class="btn btn-secondary" onclick="newMovieSearch();"><i class="fas fa-search"></i></button>
-                    <div id="search-term"></div>
-                    <div id="search-error"></div>
-                    <div id="search-results-wrapper">
-                        <table id="search-results" class="stripe hide">
-                            <tbody></tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan='3' id="search-footer-data">
-                                        Displaying <div id="current-count">0</div> of <div id="total-count">0</div>
-                                        <a id="moreLink" href="javascript:void(0);">More</a>
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div id="search-progress" class="hide progress progress-info progress-striped active">
-                        <div class="progress-bar" style="width: 100%;">
-                        </div>
-                    </div>
-                </form>
             </div>
-        </div>
-        <footer id="footer">
-            <p>St. Mary's University Software Engineering Project, Spring 2019</p>
-            <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
-        </footer>
-        <div class="form-popup" id="login-wrapper" hidden>
-            <div class="form-container">
-                <div class="container">
-                    <img src="images/logo.png" width="300">
-                    <h1>Login</h1>
+        </nav>
+    </div>
+    <div id="browser-wrapper" class="content-wrapper">
+        <div class="search-wrapper">
+            <div id="search-form">
+                <input type="text" id="movie-search" placeholder="Enter movie title...">
+                <button id="search-button" type="button" class="btn btn-secondary" onclick="newMovieSearch();"><i
+                        class="fas fa-search"></i></button>
+                <div id="search-term"></div>
+                <div id="search-error"></div>
+                <div id="search-results-wrapper">
+                    <table id="search-results" class="stripe hide">
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan='3' id="search-footer-data">
+                                    Displaying <div id="current-count">0</div> of <div id="total-count">0</div>
+                                    <a id="moreLink" href="javascript:void(0);">More</a>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="container">
-                    <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Username" name="username" id="emailInput">
+                <div id="search-progress" class="hide progress progress-info progress-striped active">
+                    <div class="progress-bar" style="width: 100%;">
                     </div>
-                    <div class="form-group">
-                        <input class="form-control" type="password" placeholder="Password" name="password" id="passwordInput">
-                    </div>
-                    <button class="btn btn-success" type="submit" onclick="loginUser()">Login</button>
-                    <button class="btn btn-secondary" onclick="closeLoginForm()">Close</button>
                 </div>
             </div>
         </div>
-        <div class="form-popup" id="register-wrapper" hidden>
-            <!-- changed form tag to div tag to keep page from refreshing (only did it for testing) -->
-            <form class="form-container">
-                <div class="container">
-                    <img src="images/logo.png" width="300">
-                    <h1>Register</h1>
+    </div>
+    <footer id="footer">
+        <p>St. Mary's University Software Engineering Project, Spring 2019</p>
+        <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
+    </footer>
+    <div class="form-popup" id="login-wrapper" hidden>
+        <div class="form-container">
+            <div class="container">
+                <img src="images/logo.png" width="300">
+                <h1>Login</h1>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Username" name="username" id="emailInput">
                 </div>
-                <div class="container">
-                    <div class="form-group">
-                        <input class="form-control" type="text" placeholder="Username" name="username" id="user_field">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="password" placeholder="Enter Your Password" name="password" id="pass_field1">
-                    </div>
-                    <div class="form-group">
-                        <input class="form-control" type="password" placeholder="Enter Password Again" name="password" id="pass_field2">
-                    </div>
-                    <button class="btn btn-success" type="submit" onclick="RegisterForm()">Register</button>
-                    <button class="btn btn-secondary" onclick="closeRegisterForm()">Close</button>
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Password" name="password"
+                        id="passwordInput">
                 </div>
-            </form>
+                <button class="btn btn-success" type="submit" onclick="loginUser()">Login</button>
+                <button class="btn btn-secondary" onclick="closeLoginForm()">Close</button>
+            </div>
         </div>
-    </body>
+    </div>
+    <div class="form-popup" id="register-wrapper" hidden>
+        <form class="form-container">
+            <div class="container">
+                <img src="images/logo.png" width="300">
+                <h1>Register</h1>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="Username" name="username" id="user_field">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Enter Your Password" name="password"
+                        id="pass_field1">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" placeholder="Enter Password Again" name="password"
+                        id="pass_field2">
+                </div>
+                <button class="btn btn-success" type="button" onclick="RegisterForm();">Register</button>
+                <button class="btn btn-secondary" type="button" onclick="closeRegisterForm();">Close</button>
+            </div>
+        </form>
+    </div>
+</body>
+
 </html>
