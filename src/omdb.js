@@ -334,25 +334,27 @@ function resizeImageTo(src, newHeight) {
 
 //adds the specified movie to the user's catalog
 function addToCatalog(el){
-    //console.log(button.getAttribute("data-imdb"));
+    addMovieToDocStore(el, 'catalog');
+}
+
+function addMovieToDocStore(el, storeName) {
+    console.log("Adding movie info to " + storeName);
     var data = JSON.parse(el.getAttribute("data-imdb"));
     var db = firebase.firestore();
     var users = db.collection("users");
-    var docId = ""+firebase.auth().currentUser.uid;
+    var docId = firebase.auth().currentUser.uid+"-"+storeName;
     users.doc(docId).get().then(function(doc) {
+        var dataToPersist = {[data.imdbID]: data};
+
         if (doc.exists) {
-            console.log("Document data:", doc.data());
-            doc.update({
-                catalog: firebase.firestore.FieldValue.arrayUnion(data)
-            });
+            console.log("Document exists, updating");
+            users.doc(docId).update(dataToPersist);
         } else {
             console.log("No such document, creating default");
-            users.doc(docId).set({
-                catalog: data
-            });
+            users.doc(docId).set(dataToPersist);
         }
     }).catch(function(error) {
-        console.log("Error getting document:", error);
+        console.log("Error getting document:"+docId, error);
     });
 }
 
@@ -361,7 +363,7 @@ function removeFromCatalog(el) {
 }
 
 function addToQueue(el) {
-    console.log("TODO: adding to queue");
+    addMovieToDocStore(el, 'queue');
 }
 function removeFromQueue(el) {
     console.log("TODO: removing from queue");
