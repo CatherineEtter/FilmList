@@ -14,11 +14,10 @@ function RegisterForm(){
         var errorMessage = error.message;
         // ...
         });    
-        window.alert("The create user works!!")
+        window.alert("The create user works!!");
+        
     }
-    
-    
-    
+        
     else  {
         
     window.alert("Passwords Do Not Match, Try Again.")
@@ -26,5 +25,6 @@ function RegisterForm(){
         
     }
 }
+   
 
 
