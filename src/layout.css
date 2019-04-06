@@ -183,6 +183,26 @@ width: 40%;
     /*padding-left: 1em*/
 }
 
-.movie-details-key {
+.v-align-top {
     vertical-align: top;
+}
+
+/*display P and SPAN tags inline for movie details*/
+.spacing {
+    display: inline;
+    margin-right: 1em;
+}
+
+#search-footer-data > div {
+    display: inline;
+}
+
+.t-align-right {
+    text-align: right;
+}
+
+.basic-movie-info > div {
+    padding-left: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
 }
