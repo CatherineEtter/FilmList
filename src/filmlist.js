@@ -7,7 +7,9 @@ function closeLoginForm() {
 
 function openRegisterForm() {
     $("#register-wrapper").removeAttr("hidden");
+    return false;
 }
 function closeRegisterForm() {
     $("#register-wrapper").attr("hidden",true);
+    return false;
 }

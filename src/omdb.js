@@ -5,36 +5,22 @@ var apiKey = 'd0507337';
 //TODO current 32x44 is too small
 var DEFAULT_MOVIE_IMAGE = 'https://m.media-amazon.com/images/G/01/imdb/images/nopicture/32x44/film-3119741174._CB483525279_.png';
 
-//height for poster is optional
-function getMoviePoster(tid,height) {
-    var opts = {
-        'i': tid
-    };
-
-    if(height) {
-        opts['h'] = height;
-    }
-}
-
-function getMovieDetails(tid, callback) {
-    var opts = {
-        'i': tid,
-        'plot': 'full'
-    };
-}
-
+//executes a new movie search. if the search term is emptym
+//an error is displayed and the OMDB call is avoided.
 function newMovieSearch() {
     //search term
     var searchTerm = $('#movie-search').val();
 
+    //avoid querying for an empty string
     if(searchTerm === '') {
-        //TODO notify empty search
+        //notify user we don't allow empty searches
+        $("#search-error").removeClass('hide').html("Error: search term is required");
         return;
     }
 
     //data to include in the search request
     var searchParams = {};
-    //limit to movies (no tv, etc)
+    //limit to movies (no tv series, etc)
     searchParams['type']='movie';
     //movie name
     searchParams['s']=searchTerm;
@@ -46,6 +32,8 @@ function newMovieSearch() {
     searchForMovie(searchParams, true);
 }
 
+//query OMDB for the provided term. if a new search (isNewSearch),
+//then reset all outputs: search term info, errors, result list, etc
 function searchForMovie(searchParams, isNewSearch) {
     var searchButton = $("search-button");
     //disable search button while searching occurs
@@ -64,18 +52,12 @@ function searchForMovie(searchParams, isNewSearch) {
         //clear previous search results
         searchResults.children('tbody').empty();
         resetFooter();
-        //clear previous paging info
-        //searchResults.children('tfoot').empty();
     }
 
     //display search term
     $("#search-term").text('Results for: ' + searchParams['s']);
 
-    //TODO implement a progress indicator
-
     $.ajax({
-        //method: 'GET',
-        //dataType: 'json',
         url: endpoint,
         data: searchParams,
         statusCode: {
@@ -87,15 +69,21 @@ function searchForMovie(searchParams, isNewSearch) {
             onMovieSearchResponse(returnedData, searchParams);
         },
         complete: function () {
-            //progress.hide();
             //re-enable search button
             $(searchButton).prop('disabled', false);
-            //g.show('slow')
+        },
+        error: function() {
+            searchError.html("Error: OMDB request failed");
         }
     });
 }
 
+//called when a user's movie search completes
+//"data" holds all the movies (max 10) in the response
+//"searchParams" are what was sent to OMDB. can be reused
+//to query for the next page of search results.
 function onMovieSearchResponse(data, searchParams) {
+    //marks if OMDB found the search term to be valid
     if(data.Response && data.Response === "True") {
         //console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
 
@@ -104,13 +92,13 @@ function onMovieSearchResponse(data, searchParams) {
 
         var tbody = searchResults.children("tbody");
 
-        //Data holds all the movies (max 10) in the response and then iterates through each movie
+        //iterate through each returned movie
         $.each(data.Search, function(rowIndex, movieInfo) {
             //console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
             //create a row per matched movie
             var row = $("<tr>").addClass("search-result").appendTo(tbody);
 
-            //first is to display the image
+            //first we display the movie image
             var imageSource = DEFAULT_MOVIE_IMAGE;
 
             //default size is 300, only do this if an image was provided
@@ -119,57 +107,55 @@ function onMovieSearchResponse(data, searchParams) {
             }
             
             //add a movie poster image
-            row.append($("<td>").addClass("primary-photo")
+            row.append($("<td class='v-align-top'>").addClass("primary-photo")
                 .append(
                     $("<img>").attr('src', imageSource)
                 )
             );
 
-
-            //add a details link with basic movie info as the text
+            //second, we add a details link with basic movie info as the text
             var detailsLink = $("<a>");
-            //TODO implement details display on click
+            //avoid linking to a resource
             detailsLink.attr('href', "javascript:void(0);");
 
-
-            //Display movie details when clicking on title and remove them when clicking again
-            //TODO: Make details dissapear when clicking on the link again
+            //initial click handler to display movie details on click.
+            //it only occurs once, then a new handler is added to toggle
+            //the details' visibility.
             detailsLink.on('click', function() {
-                //movieInfo.push({"TestID","TestValue"});
-                console.log(movieInfo);
-                var parent = $(this).parent();
-                //If the user didn't already expand movie details
-                if(!parent.hasClass("movie-details-are-expanded")) {
-                    displayMovieDetails(this, movieInfo.imdbID); //this = link that was clicked
-                    parent.addClass("movie-details-are-expanded");
-                }
-                /*
-                else {
-                    console.log(parent.getElementsByTagName("table"));
-                    //parent.removeChild(parent.childNodes.item("#movie-details-table"));
-                    //parent.removeClass("movie-details-are-expanded");
-                }
-                */
-                //this.parent.addClass("movie-details-expanded")
-                
-                
+                //console.log(movieInfo);
+                var link = $(this);
+                //only adds the details table, defaults to hidden
+                displayMovieDetails(this, movieInfo.imdbID);
             });
             detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
-            //add movie info to row (ONLY CONTAINS TITLE AS OF NOW)
-            row.append($("<td>").addClass("basic-movie-info").append(detailsLink));
+            row.append($("<td class='basic-movie-info v-align-top'>").append($("<div>").append(detailsLink)));
 
-            //add a starter button for Catherine to extend as she sees fit
-            var btn = $("<button>").addClass('btn-search-result-action').text("Add/Remove");
-            btn.attr('data-imdb', JSON.stringify(movieInfo));
-            btn.attr('onclick', "addToCatalog(this)");
-            row.append($("<td>").append(btn));
+            //thirdly, add buttons for catalog and queue
+            var movieInfoAsString = JSON.stringify(movieInfo);
+            var catalogBtn = $("<button class='btn-search-result-action'>").text("Add to Catalog");
+            catalogBtn.attr('data-imdb', movieInfoAsString);
+            catalogBtn.attr('onclick', "addToCatalog(this); false;");
+
+            var btnData = $("<td>").append(catalogBtn);
+            
+            var queueBtn = $("<button class='btn-search-result-action'>").text("Add to Queue");
+            queueBtn.attr('data-imdb', movieInfoAsString);
+            queueBtn.attr('onclick', "addToQueue(this); false;");
+            btnData.append(queueBtn);
+            
+            row.append(btnData);
         });
 
+        //update paging info to table footer
         updateFooter(data, searchParams);
 
+        //display the built table of movie results
         searchResults.removeClass('hide');
-    } else {
+    }
+    //OMDB considers the search term invalid
+    else {
         var searchError = $('#search-error');
+        //simply display the error text OMDB provided
         searchError.html(data.Error);
         searchError.removeClass('hide');
     }
@@ -194,33 +180,33 @@ function updateFooter(data, searchParams) {
     //display total count
     $('#total-count').text(totalSearchResultsCount);
 
+    //allows user to pull next page of search results
     var moreLink = $("#moreLink");
 
     //remove previous click listeners
     moreLink.off('click');
 
+    //determine if we have more search results available
     if(displayedCount < totalSearchResultsCount) {
         moreLink.removeClass("hide");
 
         //update "page" param so we return the next set of results
         searchParams['page'] = 1+parseInt(searchParams['page']);
 
+        //attach new click handler to perform the query for next page of results
         moreLink.on('click', function() {
             searchForMovie(searchParams, false);
         });
-    } else {
+    }
+    //all search results have been returned, hide this option
+    else {
         moreLink.addClass("hide");
     }
 }
 
-//Makes call to OMDB to get movie details, el is the object of the link that was clicked
+//Makes call to OMDB to get movie details, 'el' is the element that was clicked
 function displayMovieDetails(el, imdbId) {
-    //alert("Displaying details for movie " + imdbId);
-
-    var link = $(el);
-
-    //disable clicked link while searching occurs
-    link.prop('disabled', true);
+    //console.log("Displaying details for movie " + imdbId);
 
     var searchParams = {};
     searchParams['i']=imdbId;
@@ -228,13 +214,11 @@ function displayMovieDetails(el, imdbId) {
     searchParams['apikey']=apiKey;
 
     $.ajax({
-        //method: 'GET',
-        //dataType: 'json',
         url: endpoint,
         data: searchParams,
         statusCode: {
             401: function () {
-                //TODO do something else
+                //consider doing something else
                 alert("Error: Failed to get movie details for " + imdbId);
             }
         },
@@ -242,55 +226,64 @@ function displayMovieDetails(el, imdbId) {
             onMovieDetailsResponse(data, el);
         },
         complete: function () {
-            //re-enable clicked link
-            link.prop('disabled', false);
+            //nothing for now
+        },
+        error: function() {
+            //consider doing something else
+            alert("Error: Failed to get movie details");
         }
     });
 }
 
 //Adds movie details to the parent table of the link (el) that was clicked
 function onMovieDetailsResponse(data, el) {
-    //TODO check for Response='true'
-
-
-
-    console.log(data);
+    //console.log(data);
+    
+    if(!data.Response || data.Response !== "True") {
+        console.log("Failed to get movie info");
+        return;
+    }
+    
     //this is the link that was clicked
     var link = $(el);
-    //parent TD containing the link
-    //var parent = link.parent();
 
-    //create a new table to display the detailed movie data
-    var table = $("<table id='movie-details-table'>");
+    //create a new table to display the detailed movie data.
+    var table = $("<table class='movie-details-table'>");
     var tbody = $("<tbody>").appendTo(table);
+
+    //Displays a row that looks like the following (likeness copied from IMDB.com)
+    //R | 1h 32min | Action, Drama, Thriller | 15 October 2004 (USA)
+    row = $("<tr>").appendTo(tbody);
+    //leave an empty label column
+    $("<td>").appendTo(row)
+    var td = $("<td>").appendTo(row);
+    td.append($('<p class="spacing">').text(data.Rated));
+    td.append($('<span class="spacing">').text("|"));
+    td.append($('<p class="spacing">').text(data.Runtime));
+    td.append($('<span class="spacing">').text("|"));
+    td.append($('<p class="spacing">').text(data.Genre));
+    td.append($('<span class="spacing">').text("|"));
+    td.append($('<p class="spacing">').text(data.Released + " (" + data.Country + ")"));
 
     //director
     var row = $("<tr>").appendTo(tbody);
-    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("Director:"));
+    $("<td class='v-align-top'>").appendTo(row).append($('<p>').text("Director:"));
     $("<td>").appendTo(row).append($('<p>').text(data.Director));
 
     //actors
     row = $("<tr>").appendTo(tbody);
-    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("Actors:"));
+    $("<td class='v-align-top'>").appendTo(row).append($('<p>').text("Actors:"));
     $("<td>").appendTo(row).append($('<p>').text(data.Actors));
 
-    //imdb rating
+    //IMDB rating
     row = $("<tr>").appendTo(tbody);
-    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("IMDB Rating:"));
+    $("<td class='v-align-top' nowrap>").appendTo(row).append($('<p>').text("IMDB Rating:"));
     $("<td>").appendTo(row).append($('<p>').text(data.imdbRating));
 
-    //R | 1h 32min | Action, Drama, Thriller | 15 October 2004 (USA)
-    /*
+    //plot
     row = $("<tr>").appendTo(tbody);
-    var td = $("<td colspan='2'>").appendTo(row);
-    td.append($('<p>').text(data.Rated));
-    td.append($('<span class="ghost">').text("|"));
-    td.append($('<p>').text(data.Runtime));
-    td.append($('<span class="ghost">').text("|"));
-    td.append($('<p>').text(data.Genre));
-    td.append($('<span class="ghost">').text("|"));
-    td.append($('<p>').text(data.Released + " (" + data.Country + ")"));
-    */
+    $("<td class='v-align-top'>").appendTo(row).append($('<p>').text("Plot:"));
+    $("<td>").appendTo(row).append($('<p>').text(data.Plot));
 
     /*
     pull from here - https://www.imdb.com/title/tt0397537/?ref_=fn_tt_tt_8
@@ -314,18 +307,67 @@ function onMovieDetailsResponse(data, el) {
     </div>
     */
 
-    //plot
-    row = $("<tr>").appendTo(tbody);
-    $("<td class='movie-details-key'>").appendTo(row).append($('<p>').text("Plot:"));
-    $("<td>").appendTo(row).append($('<p>').text(data.Plot));
+    //attach DIV to parent <TD> containing the link.
+    //this div will contain the table with the movie details.
+    //use 'hide' so we can smoothly bring in the section.
+    var div = $("<div class='movie-details-wrapper hide'>").appendTo(link.parents("TD"));
 
-    table.appendTo(link.parent());
+    div.append(table);
+
+    //remove this click handler
+    link.off('click');
+
+    //add a simple display toggler
+    link.on('click', function() {
+        div.toggle('highlight', 750);
+    });
+
+    //call the new click handler to display the (currently hidden) movie details
+    link.click();
 }
 
 //this only works for images originating via OMDB
-function resizeImageTo(src, newHeight   ) {
+function resizeImageTo(src, newHeight) {
     //match the dot to avoid small chance of other portion existing twice within the filename
     return src.replace('SX300.','SX'+newHeight+'.');
+}
+
+//adds the specified movie to the user's catalog
+function addToCatalog(el){
+    addMovieToDocStore(el, 'catalog', 'catalog');
+}
+
+function addMovieToDocStore(el, state) {
+    console.log("Adding movie info with state " + state);
+    var data = JSON.parse(el.getAttribute("data-imdb"));
+    var db = firebase.firestore();
+    var users = db.collection("users");
+    var docId = firebase.auth().currentUser.uid+"/movies/selections";
+    users.doc(docId).get().then(function(doc) {
+        data['state'] = state;
+        var dataToPersist = {[data.imdbID]: data};
+
+        if (doc.exists) {
+            console.log("Document exists, updating");
+            users.doc(docId).update(dataToPersist);
+        } else {
+            console.log("No such document, creating default");
+            users.doc(docId).set(dataToPersist);
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:"+docId, error);
+    });
+}
+
+function removeFromCatalog(el) {
+    console.log("TODO: removing from catalog");
+}
+
+function addToQueue(el) {
+    addMovieToDocStore(el, 'queue', 'queue');
+}
+function removeFromQueue(el) {
+    console.log("TODO: removing from queue");
 }
 
 /*
@@ -366,13 +408,3 @@ http://www.omdbapi.com/?i=tt2705436&plot=full
 "Type":"movie","DVD":"N/A","BoxOffice":"N/A","Production":"N/A","Website":"N/A",
 "Response":"True"}
 */
-
-function addToCatalog(button){
-    console.log(button.getAttribute("data-imdb"));
-    var data = JSON.parse(button.getAttribute("data-imdb"));
-    var db = firebase.firestore();
-    var users = db.collection("users");
-    users.doc(""+firebase.auth().currentUser.uid).update({
-        catalog: firebase.firestore.FieldValue.arrayUnion(data)
-    });
-}

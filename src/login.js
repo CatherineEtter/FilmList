@@ -2,30 +2,29 @@ function loginUser() {
     var email = document.getElementById("emailInput").value
     var password = document.getElementById("passwordInput").value
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-    //error handling
-//        console.log("ERROR")
-        window.confirm("ERROR: " + error);
+        //error handling
+        alert("ERROR: " + error);
     });
     
-    window.alert("Welcome " + email + "!");
+    alert("Welcome " + email + "!");
     closeLoginForm();
 }
 
 function logoutUser() {
     firebase.auth().signOut().then(function() {
         console.log("Successfully signed user out");
-        window.alert("You have been signed out.");
+        //alert("You have been signed out.");
         location.reload();
     }, function(error) {
-        console.log("Error signing out user: " + error);
+        alert(error.message);
     })
 }
 
-firebase.auth().onAuthStateChanged(function(user) {
+/* firebase.auth().onAuthStateChanged(function(user) {
     if(user) { 
         //User is signed in
         console.log("Current User: " + user);
-        firebaseUser = firebase.auth().currentUser;
+        //firebaseUser = firebase.auth().currentUser;
         console.log("displayName: " + firebaseUser.displayName);
         console.log("email: " + firebaseUser.email);
         console.log("photoUrl: " + firebaseUser.photoUrl);
@@ -34,8 +33,9 @@ firebase.auth().onAuthStateChanged(function(user) {
     } else  {
         //No user is signed in
     }
-});
+}); */
 
 function closeLoginForm() {
     $("#login-wrapper").attr("hidden",true);
+    return false;
 }

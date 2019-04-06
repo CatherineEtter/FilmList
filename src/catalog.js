@@ -7,7 +7,8 @@ function testAuth(){
 function getCatalog(){
     var db = firebase.firestore();
     var users = db.collection("users");
-    users.doc(""+firebase.auth().currentUser.uid).get().then(function(doc) {
+    var docId = ""+firebase.auth().currentUser.uid+"-catalog";
+    users.doc(docId).get().then(function(doc) {
         if (doc.exists) {
             console.log("Document data:", doc.data());
         } else {
@@ -17,6 +18,4 @@ function getCatalog(){
     }).catch(function(error) {
         console.log("Error getting document:", error);
     });
-
-
 }
