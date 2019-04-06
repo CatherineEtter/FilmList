@@ -130,15 +130,25 @@ function onMovieSearchResponse(data, searchParams) {
             detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
             row.append($("<td class='basic-movie-info v-align-top'>").append($("<div>").append(detailsLink)));
 
+
+          /*
+            //add a starter button for Catherine to extend as she sees fit
+            var btn_Catalog = $("<button>").addClass('btn btn-primary btn-search-result-action').text("Add to Catalog");
+            var btn_Queue = $("<button>").addClass('btn btn-primary btn-search-result-action').text("Add to Queue");
+            btn_Catalog.attr('data-imdb-id', movieInfo.imdbID);
+            btn_Queue.attr('data-imdb-id', movieInfo.imdbID);
+            row.append($("<td>").append(btn_Catalog));
+            row.append($("<td>").append(btn_Queue));
+            */
             //thirdly, add buttons for catalog and queue
             var movieInfoAsString = JSON.stringify(movieInfo);
-            var catalogBtn = $("<button class='btn-search-result-action'>").text("Add to Catalog");
+            var catalogBtn = $("<button class='btn btn-primary btn-search-result-action'>").text("Add to Catalog");
             catalogBtn.attr('data-imdb', movieInfoAsString);
             catalogBtn.attr('onclick', "addToCatalog(this); false;");
 
             var btnData = $("<td>").append(catalogBtn);
             
-            var queueBtn = $("<button class='btn-search-result-action'>").text("Add to Queue");
+            var queueBtn = $("<button class='btn btn-primary btn-search-result-action'>").text("Add to Queue");
             queueBtn.attr('data-imdb', movieInfoAsString);
             queueBtn.attr('onclick', "addToQueue(this); false;");
             btnData.append(queueBtn);
