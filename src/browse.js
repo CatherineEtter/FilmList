@@ -352,17 +352,20 @@ function addMovieToDocStore(el, state) {
     var data = JSON.parse(el.getAttribute("data-imdb"));
     var db = firebase.firestore();
     var users = db.collection("users");
-    var docId = firebase.auth().currentUser.uid+"/movies/selections";
+    var docId = firebase.auth().currentUser.uid+"/movies/"+data.imdbID;
     users.doc(docId).get().then(function(doc) {
         data['state'] = state;
-        var dataToPersist = {[data.imdbID]: data};
-
         if (doc.exists) {
             console.log("Document exists, updating");
-            users.doc(docId).update(dataToPersist);
+            dataState = doc.data().state;
+            if((dataState == "catalog" && state == "queue") || (dataState == "queue" && state == "catalog") || (dataState == "both")){
+                console.log("Updating to \"both\"");
+                data['state'] = "both"
+            }
+            users.doc(docId).update(data);
         } else {
             console.log("No such document, creating default");
-            users.doc(docId).set(dataToPersist);
+            users.doc(docId).set(data);
         }
     }).catch(function(error) {
         console.log("Error getting document:"+docId, error);
