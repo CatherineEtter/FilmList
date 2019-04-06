@@ -142,13 +142,13 @@ function onMovieSearchResponse(data, searchParams) {
             */
             //thirdly, add buttons for catalog and queue
             var movieInfoAsString = JSON.stringify(movieInfo);
-            var catalogBtn = $("<button class='btn-search-result-action'>").text("Add to Catalog");
+            var catalogBtn = $("<button class='btn btn-primary btn-search-result-action'>").text("Add to Catalog");
             catalogBtn.attr('data-imdb', movieInfoAsString);
             catalogBtn.attr('onclick', "addToCatalog(this); false;");
 
             var btnData = $("<td>").append(catalogBtn);
             
-            var queueBtn = $("<button class='btn-search-result-action'>").text("Add to Queue");
+            var queueBtn = $("<button class='btn btn-primary btn-search-result-action'>").text("Add to Queue");
             queueBtn.attr('data-imdb', movieInfoAsString);
             queueBtn.attr('onclick', "addToQueue(this); false;");
             btnData.append(queueBtn);

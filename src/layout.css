@@ -133,6 +133,7 @@ html,body {
 }
 .btn-search-result-action {
     padding: 5px;
+    margin: 5px;
     min-width: 100px;
     font-size: 14px;
 }
