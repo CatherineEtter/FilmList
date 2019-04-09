@@ -1,3 +1,15 @@
+/**
+ * browse.js
+ * FilmList Project
+ * Software Engineering Class
+ * Teacher: Carol Redfield
+ * Programmers: Richard, Matt, Jeremy, Catherine, Colin, Manny
+ * What's in this file: 
+ *      Code for getting movies from the OMDB API
+ *      Code for displaying the results pulled from the OMDB. 
+ *      Code for adding movies to the google Firebase Database
+ */
+
 /* enables searching of movies from OMDb */
 var endpoint = 'http://www.omdbapi.com/';
 var apiKey = 'd0507337';
@@ -344,9 +356,21 @@ function resizeImageTo(src, newHeight) {
 
 //adds the specified movie to the user's catalog
 function addToCatalog(el){
-    addMovieToDocStore(el, 'catalog', 'catalog');
+    addMovieToDocStore(el, 0);
 }
 
+function addToQueue(el) {
+    addMovieToDocStore(el, 2);
+}
+
+/**
+ *          
+ * @param {*} el    The button element
+ * @param {*} state State is the storage state of the document to be saved. 
+ *                  0: Catalog
+ *                  1: Both Catalog and Queue
+ *                  2: Queue
+ */         
 function addMovieToDocStore(el, state) {
     console.log("Adding movie info with state " + state);
     var data = JSON.parse(el.getAttribute("data-imdb"));
@@ -358,9 +382,12 @@ function addMovieToDocStore(el, state) {
         if (doc.exists) {
             console.log("Document exists, updating");
             dataState = doc.data().state;
-            if((dataState == "catalog" && state == "queue") || (dataState == "queue" && state == "catalog") || (dataState == "both")){
+            //      if current state of the document is catalog and the incoming state is queue
+            //OR    if current state of the document is queue and the incoming state is catalog
+            //OR    if current state of the document is already both
+            if((dataState == 0 && state == 2) || (dataState == 2 && state == 0) || (dataState == 1)){
                 console.log("Updating to \"both\"");
-                data['state'] = "both"
+                data['state'] = 1
             }
             users.doc(docId).update(data);
         } else {
@@ -376,9 +403,6 @@ function removeFromCatalog(el) {
     console.log("TODO: removing from catalog");
 }
 
-function addToQueue(el) {
-    addMovieToDocStore(el, 'queue', 'queue');
-}
 function removeFromQueue(el) {
     console.log("TODO: removing from queue");
 }

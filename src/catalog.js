@@ -1,3 +1,15 @@
+/**
+ * browse.js
+ * FilmList Project
+ * Software Engineering Class
+ * Teacher: Carol Redfield
+ * Programmers: Richard, Matt, Jeremy, Catherine, Colin, Manny
+ * What's in this file: 
+ *      Code for getting movies from the OMDB API
+ *      Code for displaying the results pulled from the OMDB. 
+ *      Code for adding movies to the google Firebase Database
+ */
+
 function testAuth(){
     if (firebase.auth().currentUser !== null) {
         console.log("user id: " + firebase.auth().currentUser.uid);
@@ -7,15 +19,25 @@ function testAuth(){
 function getCatalog(){
     var db = firebase.firestore();
     var users = db.collection("users");
-    var docId = ""+firebase.auth().currentUser.uid+"-catalog";
-    users.doc(docId).get().then(function(doc) {
-        if (doc.exists) {
-            console.log("Document data:", doc.data());
-        } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
+    var collectionId = "users/"+firebase.auth().currentUser.uid+"/movies";
+    var movies = db.collection(collectionId);
+    var test = movies.where("state", "<=", 1).get()
+        .then(function(snapshot){
+            var ary = [];
+            snapshot.forEach(function(doc){
+                ary.push(doc.data());
+            });
+            return ary;
+        }).catch(function(error){
+            console.log("Error getting doc: ", error);
+        });
+    console.log(test);
+
+    test.then(function(ary){
+        for(var i=0; i < ary.length; i++){
+            console.log(ary[i]);
         }
-    }).catch(function(error) {
-        console.log("Error getting document:", error);
     });
+
+    return test;
 }
