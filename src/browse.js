@@ -356,11 +356,11 @@ function resizeImageTo(src, newHeight) {
 
 //adds the specified movie to the user's catalog
 function addToCatalog(el){
-    addMovieToDocStore(el, 0);
+    addMovieToDocStore(el, "catalog");
 }
 
 function addToQueue(el) {
-    addMovieToDocStore(el, 2);
+    addMovieToDocStore(el, "queue");
 }
 
 /**
@@ -376,19 +376,19 @@ function addMovieToDocStore(el, state) {
     var data = JSON.parse(el.getAttribute("data-imdb"));
     var db = firebase.firestore();
     var users = db.collection("users");
-    var docId = firebase.auth().currentUser.uid+"/movies/"+data.imdbID;
+    var docId = ""+firebase.auth().currentUser.uid + "/" + state + "/" + data.imdbID;
     users.doc(docId).get().then(function(doc) {
-        data['state'] = state;
+        data['time'] = Date.now();
         if (doc.exists) {
             console.log("Document exists, updating");
-            dataState = doc.data().state;
-            //      if current state of the document is catalog and the incoming state is queue
+            //Saving just in case. For single collection state checking.
+            /*//      if current state of the document is catalog and the incoming state is queue
             //OR    if current state of the document is queue and the incoming state is catalog
             //OR    if current state of the document is already both
-            if((dataState == 0 && state == 2) || (dataState == 2 && state == 0) || (dataState == 1)){
+            if((dataState == "catalog" && state == "queue") || (dataState == "queue" && state == "catalog") || (dataState == "both")){
                 console.log("Updating to \"both\"");
-                data['state'] = 1
-            }
+                data['state'] = "both"
+            }*/
             users.doc(docId).update(data);
         } else {
             console.log("No such document, creating default");

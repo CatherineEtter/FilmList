@@ -17,27 +17,32 @@ function testAuth(){
 }
 
 function testGetCatalog(){
-    var catalogQ = getCatalog();
 
-    var test = arrayify(catalogQ);
+    var catalogQ = getWholeCatalog(catalogCID(), "desc");
+    consoleOutputPromiseArray(catalogQ);
 
-    consoleOutputPromiseArray(test);
-
-    //console.log("Outputting a filtered query. ");
-    //consoleOutputPromiseArray(arrayify(filterYear(catalogQ, "1938")));
-    
 }
 
-function getCatalog(){
+//returns the catalog collection ID
+function catalogCID(){
     var db = firebase.firestore();
     var users = db.collection("users");
-    var collectionId = "users/"+firebase.auth().currentUser.uid+"/movies";
-    var movies = db.collection(collectionId);
-    return movies.where("state", "<=", 1).where("year", "==", "1938");
+    var collectionId = "users/"+firebase.auth().currentUser.uid+"/catalog";
+    return db.collection(collectionId);
 }
 
-function filterYear(query, year){
-    return query.where("year", "==", year);
+//returns year query
+function filterYear(CID, year){
+    return arrayify(CID.where("year", "==", year));
+}
+
+//returns catalog sorted by time query
+function getWholeCatalog(CID, order){
+    return arrayify(CID.orderBy("time", order));
+}
+
+function fiterGenre(CID, genre){
+    return arrayify(CID.where("genre", "==", genre));
 }
 
 function arrayify(query){
