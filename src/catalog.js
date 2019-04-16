@@ -20,6 +20,9 @@ function testGetCatalog(){
     console.log("test");
     var catalogQ = filterGenre(catalogCID(), "Comedy");
     consoleOutputPromiseArray(catalogQ);
+    console.log("test2");
+    //catalogQ = getWholeCatalog(catalogCID(), "asc");
+    //consoleOutputPromiseArray(catalogQ);
     //catalogQ = filterYear(catalogCID(), "1999");
     //consoleOutputPromiseArray(catalogQ);
     //var CID = catalogCID();
@@ -43,12 +46,16 @@ function filterYear(CID, year){
 }
 
 //returns catalog sorted by time query
-//function getWholeCatalog(CID, order){
-//    return arrayify(CID.orderBy("Time", order));
-//}
+function getWholeCatalog(CID, order){
+    return arrayify(CID.orderBy("TimeAdded", order));
+}
 
 function filterGenre(CID, genre){
-    return arrayify(CID.where("Genre", "==", genre));
+    return arrayify(CID.where("Genre", "array-contains", genre));
+}
+
+function filterActor(CID, actor){
+    return arrayify(CID.where("Actor", "array-contains", actor));
 }
 
 function arrayify(query){
