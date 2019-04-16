@@ -17,32 +17,38 @@ function testAuth(){
 }
 
 function testGetCatalog(){
-
-    var catalogQ = getWholeCatalog(catalogCID(), "desc");
+    console.log("test");
+    var catalogQ = filterGenre(catalogCID(), "Comedy");
     consoleOutputPromiseArray(catalogQ);
-    /*
+    //catalogQ = filterYear(catalogCID(), "1999");
+    //consoleOutputPromiseArray(catalogQ);
+    //var CID = catalogCID();
+    //CID = CID.where("Genre","==","Comedy");
+    //var ary = arrayify(CID);
+    //consoleOutputPromiseArray(ary);
+    /** /
     //DOESNT WORK.
     var CID = catalogCID();
     CID = CID.where("Year", "<=", '2012');
     CID = CID.where("Genre", "==", 'Comedy');
     var ary = arrayify(CID);
     consoleOutputPromiseArray(ary);
-    /*/
+    //*/
 
 }
 
 //returns year query
 function filterYear(CID, year){
-    return arrayify(CID.where("year", "==", year));
+    return arrayify(CID.where("Year", "==", year));
 }
 
 //returns catalog sorted by time query
-function getWholeCatalog(CID, order){
-    return arrayify(CID.orderBy("time", order));
-}
+//function getWholeCatalog(CID, order){
+//    return arrayify(CID.orderBy("Time", order));
+//}
 
-function fiterGenre(CID, genre){
-    return arrayify(CID.where("genre", "==", genre));
+function filterGenre(CID, genre){
+    return arrayify(CID.where("Genre", "==", genre));
 }
 
 function arrayify(query){
