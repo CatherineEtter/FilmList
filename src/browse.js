@@ -400,7 +400,7 @@ function addMovieToDocStore(el, collection, collectionName) {
     console.log("Adding movie " + docId + " to doc store " + collection.path);
 
     collection.doc(docId).get().then(function(doc) {
-        data['time'] = Date.now();
+        data['TimeAdded'] = Date.now();
         if (doc.exists) {
             console.log("Document exists on add, updating");
             //Saving just in case. For single collection state checking.
@@ -430,7 +430,6 @@ function removeMovieFromDocStore(el, collection) {
     console.log("Removing movie " + docId + " from doc store " + collection.path);
 
     collection.doc(docId).get().then(function(doc) {
-        data['time'] = Date.now();
         if (doc.exists) {
             console.log("Document exists on remove, deleting");
             //Saving just in case. For single collection state checking.
