@@ -37,6 +37,7 @@ function filterYear(CID, year){
 }
 
 //returns catalog sorted by time query
+//order must be "asc" or "desc"
 function getWholeCatalog(CID, order){
     return arrayify(CID.orderBy("time", order));
 }
@@ -63,4 +64,8 @@ function consoleOutputPromiseArray(promiseArray){
             console.log(ary[i]);
         }
     });
+}
+//takes the catalog of movie information and displays them to the user in a list
+function displayCatalog() {
+    console.log(arrayify(getWholeCatalog(catalogCID(),"asc")));
 }
