@@ -17,6 +17,9 @@ var apiKey = 'd0507337';
 //TODO current 32x44 is too small
 var DEFAULT_MOVIE_IMAGE = 'https://m.media-amazon.com/images/G/01/imdb/images/nopicture/32x44/film-3119741174._CB483525279_.png';
 
+//custom attribute where we keep the vital movie details
+var MOVIE_DETAILS_ATTR_KEY = "data-imdb-details";
+
 //executes a new movie search. if the search term is emptym
 //an error is displayed and the OMDB call is avoided.
 function newMovieSearch() {
@@ -142,30 +145,8 @@ function onMovieSearchResponse(data, searchParams) {
             detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
             row.append($("<td class='basic-movie-info v-align-top'>").append($("<div>").append(detailsLink)));
 
-
-          /*
-            //add a starter button for Catherine to extend as she sees fit
-            var btn_Catalog = $("<button>").addClass('btn btn-primary btn-search-result-action').text("Add to Catalog");
-            var btn_Queue = $("<button>").addClass('btn btn-primary btn-search-result-action').text("Add to Queue");
-            btn_Catalog.attr('data-imdb-id', movieInfo.imdbID);
-            btn_Queue.attr('data-imdb-id', movieInfo.imdbID);
-            row.append($("<td>").append(btn_Catalog));
-            row.append($("<td>").append(btn_Queue));
-            */
-            //thirdly, add buttons for catalog and queue
-            var movieInfoAsString = JSON.stringify(movieInfo);
-            var catalogBtn = $("<button class='btn btn-primary btn-search-result-action'>").text("Add to Catalog");
-            catalogBtn.attr('data-imdb', movieInfoAsString);
-            catalogBtn.attr('onclick', "addToCatalog(this); false;");
-
-            var btnData = $("<td>").append(catalogBtn);
-            
-            var queueBtn = $("<button class='btn btn-primary btn-search-result-action'>").text("Add to Queue");
-            queueBtn.attr('data-imdb', movieInfoAsString);
-            queueBtn.attr('onclick', "addToQueue(this); false;");
-            btnData.append(queueBtn);
-            
-            row.append(btnData);
+            //thirdly, add placement TD for buttons
+            row.append($("<td class='button-container'>"));
         });
 
         //update paging info to table footer
@@ -180,6 +161,32 @@ function onMovieSearchResponse(data, searchParams) {
         //simply display the error text OMDB provided
         searchError.html(data.Error);
         searchError.removeClass('hide');
+    }
+}
+
+function updateCatalogButton(button, isMovieInCatalog) {
+    //remove existing click handlers
+    button.off("click");
+    
+    if(isMovieInCatalog) {
+        button.text("Remove from Catalog");
+        button.on('click', function() {removeFromCatalog(this); false;});
+    } else {
+        button.text("Add to Catalog");
+        button.on('click', function() {addToCatalog(this); false;});
+    }
+}
+
+function updateQueueButton(button, isMovieInQueue) {
+    //remove existing click handlers
+    button.off("click");
+
+    if(isMovieInQueue) {
+        button.text("Remove from Queue");
+        button.on('click', function() {removeFromQueue(this); false;});
+    } else {
+        button.text("Add to Queue");
+        button.on('click', function() {addToQueue(this); false;});
     }
 }
 
@@ -300,39 +307,38 @@ function onMovieDetailsResponse(data, el) {
     //IMDB rating
     row = $("<tr>").appendTo(tbody);
     $("<td class='v-align-top' nowrap>").appendTo(row).append($('<p>').text("IMDB Rating:"));
-    $("<td>").appendTo(row).append($('<p>').text(data.imdbRating));
+    $("<td>").appendTo(row).append($('<p>').text(data.imdbRating + " / 10"));
 
     //plot
     row = $("<tr>").appendTo(tbody);
     $("<td class='v-align-top'>").appendTo(row).append($('<p>').text("Plot:"));
     $("<td>").appendTo(row).append($('<p>').text(data.Plot));
 
-    /*
-    pull from here - https://www.imdb.com/title/tt0397537/?ref_=fn_tt_tt_8
-    <div class="ratings_wrapper">
-        <div class="imdbRating" itemtype="http://schema.org/AggregateRating" itemscope="" itemprop="aggregateRating">
-            <div class="ratingValue">
-                <span itemprop="ratingValue">5.7</span>
-                <span class="grey">/</span>
-                <span class="grey" itemprop="bestRating">10</span>
-            </div>
-            <a href="https://www.imdb.com/title/tt0397537/ratings?ref_=tt_ov_rt"><span class="small" itemprop="ratingCount">445</span></a>
-        </div>
-        <div id="star-rating-widget" class="star-rating-widget">
-            <div class="star-rating-button">
-                <button>
-                    <span class="star-rating-star no-rating"></span>
-                    <span class="star-rating-text">Rate This</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    */
+    //create row for Add/Remove buttons
+    row = $("<tr>").appendTo(tbody);
+    //plain TD with no label
+    $("<td class='v-align-top'>").appendTo(row);
+    //DIV to hold both buttons
+    var div = $("<div class='movie-details-button-container'>").appendTo($("<td>").appendTo(row));
+    //first is the catalog button
+    var catalogBtn = $("<button class='btn btn-primary btn-search-result-action'>");
+    updateCatalogButton(catalogBtn, movieStates[data.imdbID] == 'catalog');
+    
+    div.append(catalogBtn);
+    //next is the queue button
+    var queueBtn = $("<button class='btn btn-primary btn-search-result-action'>");
+    updateQueueButton(queueBtn, movieStates[data.imdbID] == 'queue');
 
+    div.append(queueBtn);
+    
+    //very important to add the full movie details to the table
+    var movieInfoAsString = JSON.stringify(data);
+    table.attr(MOVIE_DETAILS_ATTR_KEY, movieInfoAsString);
+    
     //attach DIV to parent <TD> containing the link.
     //this div will contain the table with the movie details.
     //use 'hide' so we can smoothly bring in the section.
-    var div = $("<div class='movie-details-wrapper hide'>").appendTo(link.parents("TD"));
+    div = $("<div class='movie-details-wrapper hide'>").appendTo(link.parents("TD"));
 
     div.append(table);
 
@@ -354,33 +360,49 @@ function resizeImageTo(src, newHeight) {
     return src.replace('SX300.','SX'+newHeight+'.');
 }
 
-//adds the specified movie to the user's catalog
+//does the folowing:
+//add the specified movie to the user's catalog
+//remove the movie from the user's queue
+//updates the catalog button's text and click handler
+//updates the queue button's text and click handler
 function addToCatalog(el){
-    addMovieToDocStore(el, "catalog");
+    var button = $(el);
+    var table = button.parents("table")[0];
+    addMovieToDocStore(table, catalogCID(), 'catalog');
+    removeMovieFromDocStore(table, queueCID());
+    updateCatalogButton(button, true);
+    updateQueueButton(button.siblings(), false);
 }
 
+//does the folowing:
+//add the specified movie to the user's queue
+//remove the movie from the user's catalog
+//updates the queue button's text and click handler
+//updates the catalog button's text and click handler
 function addToQueue(el) {
-    addMovieToDocStore(el, "queue");
+    var button = $(el);
+    var table = button.parents("table")[0];
+    addMovieToDocStore(table, queueCID(), 'queue');
+    removeMovieFromDocStore(table, catalogCID());
+    updateQueueButton(button, true);
+    updateCatalogButton(button.siblings(), false);
 }
 
 /**
  *          
  * @param {*} el    The button element
- * @param {*} state State is the storage state of the document to be saved. 
- *                  0: Catalog
- *                  1: Both Catalog and Queue
- *                  2: Queue
+ * @param {*} collection collection to save movie info into
  */         
-function addMovieToDocStore(el, state) {
-    console.log("Adding movie info with state " + state);
-    var data = JSON.parse(el.getAttribute("data-imdb"));
-    var db = firebase.firestore();
-    var users = db.collection("users");
-    var docId = ""+firebase.auth().currentUser.uid + "/" + state + "/" + data.imdbID;
-    users.doc(docId).get().then(function(doc) {
+function addMovieToDocStore(el, collection, collectionName) {
+    var data = JSON.parse(el.getAttribute(MOVIE_DETAILS_ATTR_KEY));
+    var docId = data.imdbID;
+
+    console.log("Adding movie " + docId + " to doc store " + collection.path);
+
+    collection.doc(docId).get().then(function(doc) {
         data['time'] = Date.now();
         if (doc.exists) {
-            console.log("Document exists, updating");
+            console.log("Document exists on add, updating");
             //Saving just in case. For single collection state checking.
             /*//      if current state of the document is catalog and the incoming state is queue
             //OR    if current state of the document is queue and the incoming state is catalog
@@ -389,22 +411,82 @@ function addMovieToDocStore(el, state) {
                 console.log("Updating to \"both\"");
                 data['state'] = "both"
             }*/
-            users.doc(docId).update(data);
+            collection.doc(docId).update(data);
         } else {
-            console.log("No such document, creating default");
-            users.doc(docId).set(data);
+            console.log("No such document on add, creating default");
+            collection.doc(docId).set(data);
         }
     }).catch(function(error) {
-        console.log("Error getting document:"+docId, error);
+        console.log("Error adding movie to doc store:"+docId, error);
     });
+
+    movieStates[[docId]] = collectionName;
+}
+
+function removeMovieFromDocStore(el, collection) {
+    var data = JSON.parse(el.getAttribute(MOVIE_DETAILS_ATTR_KEY));
+    var docId = data.imdbID;
+
+    console.log("Removing movie " + docId + " from doc store " + collection.path);
+
+    collection.doc(docId).get().then(function(doc) {
+        data['time'] = Date.now();
+        if (doc.exists) {
+            console.log("Document exists on remove, deleting");
+            //Saving just in case. For single collection state checking.
+            /*//      if current state of the document is catalog and the incoming state is queue
+            //OR    if current state of the document is queue and the incoming state is catalog
+            //OR    if current state of the document is already both
+            if((dataState == "catalog" && state == "queue") || (dataState == "queue" && state == "catalog") || (dataState == "both")){
+                console.log("Updating to \"both\"");
+                data['state'] = "both"
+            }*/
+            collection.doc(docId).delete();
+        } else {
+            console.log("No such document on remove, doing nothing");
+        }
+    }).catch(function(error) {
+        console.log("Error removing movie from doc store:"+docId, error);
+    });
+
+    return docId;
 }
 
 function removeFromCatalog(el) {
-    console.log("TODO: removing from catalog");
+    var button = $(el);
+    var table = button.parents("table")[0];
+    var docId = removeMovieFromDocStore(table, catalogCID());
+    delete movieStates[[docId]];
+    updateCatalogButton(button, false);
 }
 
 function removeFromQueue(el) {
-    console.log("TODO: removing from queue");
+    var button = $(el);
+    var table = button.parents("table")[0];
+    var docId = removeMovieFromDocStore(table, queueCID());
+    delete movieStates[[docId]];
+    updateQueueButton(button, false);
+}
+
+var movieStates = {}
+
+function loadMovieStatesForBrowseTab() {
+    loadMovieStates(catalogCID(), 'catalog');
+    loadMovieStates(queueCID(), 'queue');
+}
+
+function loadMovieStates(collection, state) {
+    collection.get().then(function(snapshot) {
+        console.log("Enumerating docs for state " +state);
+        //console.log(snapshot);
+
+        snapshot.forEach(function(doc){
+            var data = doc.data();
+            movieStates[[data.imdbID]] = state;
+        });
+    }).catch(function(error) {
+        console.log("Error enumerating collection for state "+state, error);
+    });
 }
 
 /*

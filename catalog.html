@@ -4,30 +4,28 @@
         <title>FilmList</title>
         <!--Bootstrap-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <!-- jquery UI -->
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+        <!-- Font Awesome-->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
         <!--Custom Stylesheet-->
         <link rel="stylesheet" href="src/layout.css" type="text/css">
         <!--Api stuff-->
         <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/5.8.4/firebase-firestore.js"></script>
-        <script> 
-             // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyB9Y2j70ctBMQc-GlbkvGkU5pIwlTM3RJ0",
-                authDomain: "movieproject-9d83d.firebaseapp.com",
-                databaseURL: "https://movieproject-9d83d.firebaseio.com",
-                projectId: "movieproject-9d83d",
-                storageBucket: "movieproject-9d83d.appspot.com",
-                messagingSenderId: "721138716237"
-            };
-            firebase.initializeApp(config);
-        </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <script type="text/javascript" src="src/account.js"></script>
         <script type="text/javascript" src="src/filmlist.js"></script>
         <script type="text/javascript" src="src/catalog.js"></script>
+        <script type="text/javascript">
+            $().ready(function() {
+                initializeFirebase();
+            });
+        </script>
     </head>
     <body>
         <div class="header-wrapper">

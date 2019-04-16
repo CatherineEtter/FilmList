@@ -1,26 +1,5 @@
-var currentUser = firebase.auth().currentUser;
-
-firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-        //User is signed in
-        console.log("Current User (Account.js): " + user);
-        currentUser = user;
-        console.log("displayName: " + currentUser.displayName);
-        console.log("email: " + currentUser.email);
-        console.log("photoUrl: " + currentUser.photoUrl);
-        console.log("emailVerified: " + currentUser.emailVerified);
-        console.log("uid: " + currentUser.uid);
-        setUserProfile();
-
-        //user may have come in via registration modal, so hide it
-        closeRegisterForm();
-    } else {
-        //No user is signed in
-    }
-});
-
 //TODO have this update an area that's visible at the top right
-function setUserProfile() {
+function setUserProfile(currentUser) {
     var nameLabel = document.getElementById("nameHeader");
 
     //we may not be on the "account" page
@@ -44,6 +23,8 @@ function setImage(newImgSrc) {
 function changeImage() {
     var url = prompt("Enter a URL", "URL");
     if (url != null) {
+        var currentUser = firebase.auth().currentUser;
+
         currentUser.updateProfile({
             photoUrl: url
         }).then(function () {
@@ -74,6 +55,8 @@ function changePassword() {
     }
 
     if (initialPassword == confirmationPassword) {
+        var currentUser = firebase.auth().currentUser;
+        
         currentUser.updatePassword(initialPassword).then(function () {
             console.log("Password Update Successful");
         }).catch(function (error) {

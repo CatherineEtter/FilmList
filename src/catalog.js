@@ -23,14 +23,6 @@ function testGetCatalog(){
 
 }
 
-//returns the catalog collection ID
-function catalogCID(){
-    var db = firebase.firestore();
-    var users = db.collection("users");
-    var collectionId = "users/"+firebase.auth().currentUser.uid+"/catalog";
-    return db.collection(collectionId);
-}
-
 //returns year query
 function filterYear(CID, year){
     return arrayify(CID.where("year", "==", year));

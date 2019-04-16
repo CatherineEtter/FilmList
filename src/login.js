@@ -20,24 +20,6 @@ function logoutUser() {
     })
 }
 
-firebase.auth().onAuthStateChanged(function(user) {
-    if(user) { 
-        //User is signed in
-        console.log("Current User: " + user);
-        firebaseUser = firebase.auth().currentUser;
-        console.log("displayName: " + firebaseUser.displayName);
-        console.log("email: " + firebaseUser.email);
-        console.log("photoUrl: " + firebaseUser.photoUrl);
-        console.log("emailVerified: " + firebaseUser.emailVerified);
-        console.log("uid: " + firebaseUser.uid);
-        
-        checkForUserInDatabase(user);
-    } else  {
-        //No user is signed in
-    }
-});
-
-
 function checkForUserInDatabase(user) {
     var database = firebase.firestore();
     var docRef = database.collection("users").doc(user.uid)
