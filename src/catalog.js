@@ -67,5 +67,8 @@ function consoleOutputPromiseArray(promiseArray){
 }
 //takes the catalog of movie information and displays them to the user in a list
 function displayCatalog() {
-    console.log(arrayify(getWholeCatalog(catalogCID(),"asc")));
+    console.log("Getting arrayify(getWholeCatalog(catalogCID(),'asc')):\n")
+    console.log(arrayify(getWholeCatalog(catalogCID(),"asc"))) 
+    console.log("\nGetting arrayify(filterGenre(CatalogCID(),'action')):\n")
+    console.log(arrayify(filterGenre(CatalogCID(),"action")));
 }
