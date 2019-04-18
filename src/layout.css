@@ -207,3 +207,13 @@ width: 40%;
     padding-top: 1em;
     padding-bottom: 1em;
 }
+/*** Movie Listing in Catalog and Queue***/
+#movie-listing-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#movie-listing {
+    margin: 10px;
+    max-width: 80%;
+}

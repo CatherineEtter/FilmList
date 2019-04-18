@@ -67,8 +67,21 @@ function consoleOutputPromiseArray(promiseArray){
 }
 //takes the catalog of movie information and displays them to the user in a list
 function displayCatalog() {
-    /*
-    var promise = getWholeCatalog(catalogCID(),"asc");
-    console.log(promise);
+    console.log("Getting arrayify(getWholeCatalog(catalogCID(),'asc')):\n")
+    console.log(getWholeCatalog(catalogCID(),"asc"));
+    console.log("\nGetting arrayify(filterGenre(CatalogCID(),'action')):\n")
+    console.log(arrayify(filterGenre(CatalogCID(),"action")));
     */
+    var movielist = ( '<ul id="movie-listing" class="list-group list-group-flush">' );
+    //Do something with the query, example below
+
+    movielist += ('<li class="list-group-item"> Test 1 </li>');
+    movielist += ('<li class="list-group-item"> Test 2 </li>');
+    movielist += ('<li class="list-group-item"> Test 3 </li>');
+
+
+    movielist += ('</ul');
+    console.log(movielist);
+
+    $( "#movie-listing-container" ).append(movielist);
 }
