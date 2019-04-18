@@ -53,9 +53,9 @@
         <div id="catalog-wrapper" class="content-wrapper">
             <div id="filter-search-wrapper">
                 <div class="search-wrapper">
-                <input type="text" name="movie-search" placeholder="Enter movie title..." id="searchbar">
+                <input type="text" name="movie-search" placeholder="Search for a title..." id="searchbar">
                 <!--TODO: Replace "Search" with a search icon instead-->
-                <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i></button>
+                <button type="submit" class="btn btn-secondary" onclick="titleSearch();"><i class="fas fa-search"></i></button>
                 </div>
                 <button id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button> 
                 <div id="movie-filter-box" class="collapse">
@@ -81,11 +81,11 @@
                             </select>
                         </div>
                     </form>
-                    <button type="button" class="btn btn-secondary" onclick="searchCatalog(); false;">Filter</button>
+                    <button type="button" class="btn btn-secondary" onclick="searchCatalog(); false;">Filter Catalog</button>
                 </div>
             </div>
-            <button class="btn" type='button' onclick="testAuth()">TEST AUTH</button>
-            <button class="btn" type='button' onclick="testGetCatalog()">LOAD CATALOG</button>
+            <button class="btn" type='button' onclick="testAuth();">TEST AUTH</button>
+            <button class="btn" type='button' onclick="testGetCatalog(); false;">LOAD CATALOG</button>
         </div>
     </body>
 </html>
