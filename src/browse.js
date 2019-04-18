@@ -401,6 +401,10 @@ function addMovieToDocStore(el, collection, collectionName) {
 
     collection.doc(docId).get().then(function(doc) {
         data['TimeAdded'] = Date.now();
+        data['Genre'] = data['Genre'].split(", ");
+        data['Actors'] = data['Actors'].split(", ");
+        data['Language'] = data['Language'].split(", ");
+
         if (doc.exists) {
             console.log("Document exists on add, updating");
             //Saving just in case. For single collection state checking.
