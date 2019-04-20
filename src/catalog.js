@@ -44,10 +44,10 @@ function searchCatalog(){
     }
 
     if(genreInput.length!=0){
-        var ary1 = arrayify(CID.where("Genre", "array-contains", genreInput[0]));
+        var ary1 = filterGenre(CID, genreInput[0]);
         for(var i=1; i<genreInput.length; i++){
             console.log("merging arrays");
-            ary1 = mergePromiseArrays(arrayify(CID.where("Genre", "array-contains", genreInput[i])), ary1);
+            ary1 = mergePromiseArrays(filterGenre(CID, genreInput[i]), ary1);
         }
     }
 
@@ -85,6 +85,7 @@ function filterYear(CID, year){
 }
 
 //returns catalog sorted by time query
+//order must be "asc" or "desc"
 function getWholeCatalog(CID, order){
     return arrayify(CID.orderBy("TimeAdded", order));
 }
@@ -125,4 +126,35 @@ function consoleOutputPromiseArray(promiseArray){
             console.log(ary[i]);
         }
     });
+}
+function displayFilteredGenreCatalog(genreType) {
+
+}
+function displayFilteredYearCatalog(year) {
+    
+}
+function displayUnfilteredCatalog() {
+    var catalogPromise = getWholeCatalog(catalogCID(),'asc');
+    catalogPromise.then(function(array) {
+        displayCatalog(array);
+    });
+}
+//TODO make functions for each filter to get the filtered catalog and display it
+//takes the catalog of movie information and displays them to the user in a list
+function displayCatalog(catArray) {
+    //console.log(movielist);
+    console.log(catArray);
+    var listBuilder;
+    for(var i = 0; i < catArray.length; i++) {
+        for(var key in catArray[i]) {
+            //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
+            listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
+            listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
+            listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
+            listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
+            listBuilder += (' </div> ');
+        }
+        console.log(listBuilder);
+        $( "#movie-listing-container" ).append(listBuilder);
+    }
 }
