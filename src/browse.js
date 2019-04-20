@@ -422,6 +422,7 @@ function addMovieToDocStore(el, collection, collectionName) {
         }
     }).catch(function(error) {
         console.log("Error adding movie to doc store:"+docId, error);
+        alert("Can't add " + data['Title'] + " to " + collectionName + " database.");
     });
 
     movieStates[[docId]] = collectionName;
@@ -450,6 +451,7 @@ function removeMovieFromDocStore(el, collection) {
         }
     }).catch(function(error) {
         console.log("Error removing movie from doc store:"+docId, error);
+        alert("Can't remove " + data['Title'] + " to " + collectionName + " database.");
     });
 
     return docId;
@@ -474,8 +476,10 @@ function removeFromQueue(el) {
 var movieStates = {}
 
 function loadMovieStatesForBrowseTab() {
-    loadMovieStates(catalogCID(), 'catalog');
-    loadMovieStates(queueCID(), 'queue');
+    if(firebase.auth().currentUser){
+        loadMovieStates(catalogCID(), 'catalog');
+        loadMovieStates(queueCID(), 'queue');
+    }
 }
 
 function loadMovieStates(collection, state) {

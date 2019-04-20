@@ -44,10 +44,10 @@ function searchCatalog(){
     }
 
     if(genreInput.length!=0){
-        var ary1 = arrayify(CID.where("Genre", "array-contains", genreInput[0]));
+        var ary1 = filterGenre(CID, genreInput[0]);
         for(var i=1; i<genreInput.length; i++){
             console.log("merging arrays");
-            ary1 = mergePromiseArrays(arrayify(CID.where("Genre", "array-contains", genreInput[i])), ary1);
+            ary1 = mergePromiseArrays(filterGenre(CID, genreInput[i]), ary1);
         }
     }
 
