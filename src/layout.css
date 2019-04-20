@@ -10,10 +10,13 @@ html,body {
     background-size: cover;
 }
 #header {
-    height: 150px;
+    height: 200px;
     margin: 0px;
     color: #FFF;
     background-color: #282828;
+}
+.tagline {
+    font-size: 1rem;
 }
 .content-wrapper{
     height: 100%;
