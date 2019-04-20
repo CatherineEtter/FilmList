@@ -65,24 +65,44 @@ function consoleOutputPromiseArray(promiseArray){
         }
     });
 }
+function displayUnfilteredCatalog() {
+    var catalogPromise = getWholeCatalog(catalogCID(),'asc');
+    catalogPromise.then(function(array) {
+        displayCatalog(array);
+    });
+}
+//TODO make functions for each filter to get the filtered catalog and display it
 //takes the catalog of movie information and displays them to the user in a list
-function displayCatalog() {
+function displayCatalog(catArray) {
+    //console.log(movielist);
+    console.log(catArray);
+    var listBuilder;
+    for(var i = 0; i < catArray.length; i++) {
+        for(var key in catArray[i]) {
+            //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
+            listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
+            listBuilder += (' <h4> ' + catArray[i]['Title']+ ' </h4>');
+            listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
+            listBuilder += (' <h4> ' + catArray[i]['Year']+ ' </h4>');
+            listBuilder += (' </div> ');
+        }
+        console.log(listBuilder);
+        $( "#movie-listing-container" ).append(listBuilder);
+        /*
+        listBuilder = ('<div class="squareImage"' + catArray[i]. + '>');
+        listBuilder += ('</div>');
+        */
+    }
+
     /*
-    console.log("Getting arrayify(getWholeCatalog(catalogCID(),'asc')):\n")
-    console.log(getWholeCatalog(catalogCID(),"asc"));
-    console.log("\nGetting arrayify(filterGenre(CatalogCID(),'action')):\n")
-    console.log(arrayify(filterGenre(CatalogCID(),"action")));
-    */
     var movielist = ( '<ul id="movie-listing" class="list-group list-group-flush">' );
     //Do something with the query, example below
 
     movielist += ('<li class="list-group-item"> Test 1 </li>');
     movielist += ('<li class="list-group-item"> Test 2 </li>');
     movielist += ('<li class="list-group-item"> Test 3 </li>');
-
-
     movielist += ('</ul');
-    console.log(movielist);
-
-    $( "#movie-listing-container" ).append(movielist);
+*/
+    
+    //$( "#movie-listing-container" ).append(movielist);
 }
