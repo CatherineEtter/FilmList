@@ -24,7 +24,14 @@
         <script type="text/javascript">
             $().ready(function() {
                 initializeFirebase();
+                firebase.auth().onAuthStateChanged(function (user) {
+                    if (user) {
+                        displayUnfilteredCatalog();
+                    }
+                });
             });
+            
+
         </script>
     </head>
     <body>

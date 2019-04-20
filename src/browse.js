@@ -22,7 +22,8 @@ var MOVIE_DETAILS_ATTR_KEY = "data-imdb-details";
 
 //executes a new movie search. if the search term is emptym
 //an error is displayed and the OMDB call is avoided.
-function newMovieSearch() {
+//searchType is inculded to account for "too many results" errors
+function newMovieSearch(searchType) {
     //search term
     var searchTerm = $('#movie-search').val();
 
@@ -38,7 +39,7 @@ function newMovieSearch() {
     //limit to movies (no tv series, etc)
     searchParams['type']='movie';
     //movie name
-    searchParams['s']=searchTerm;
+    searchParams[searchType]=searchTerm;
     //pull set #1 of search results
     searchParams['page']=1;
     //key allowing API access
@@ -70,7 +71,11 @@ function searchForMovie(searchParams, isNewSearch) {
     }
 
     //display search term
-    $("#search-term").text('Results for: ' + searchParams['s']);
+    if(searchParams['s']){
+        $("#search-term").text('Results for: ' + searchParams['s']);
+    }else if(searchParams['t']){
+        $("#search-term").text('Results for: ' + searchParams['t']);
+    }
 
     $.ajax({
         url: endpoint,
@@ -99,6 +104,7 @@ function searchForMovie(searchParams, isNewSearch) {
 //to query for the next page of search results.
 function onMovieSearchResponse(data, searchParams) {
     //marks if OMDB found the search term to be valid
+    console.log(data);
     if(data.Response && data.Response === "True") {
         //console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
 
@@ -108,7 +114,51 @@ function onMovieSearchResponse(data, searchParams) {
         var tbody = searchResults.children("tbody");
 
         //iterate through each returned movie
-        $.each(data.Search, function(rowIndex, movieInfo) {
+        if(searchParams['s']){
+            $.each(data.Search, function(rowIndex, movieInfo) {
+                //console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
+                //create a row per matched movie
+                var row = $("<tr>").addClass("search-result").appendTo(tbody);
+
+                //first we display the movie image
+                var imageSource = DEFAULT_MOVIE_IMAGE;
+
+                //default size is 300, only do this if an image was provided
+                if(movieInfo.Poster !== 'N/A') {
+                    imageSource = resizeImageTo(movieInfo.Poster, 100);
+                }
+                
+                //add a movie poster image
+                row.append($("<td class='v-align-top'>").addClass("primary-photo")
+                    .append(
+                        $("<img>").attr('src', imageSource)
+                    )
+                );
+
+                //second, we add a details link with basic movie info as the text
+                var detailsLink = $("<a>");
+                //avoid linking to a resource
+                detailsLink.attr('href', "javascript:void(0);");
+
+                //initial click handler to display movie details on click.
+                //it only occurs once, then a new handler is added to toggle
+                //the details' visibility.
+                detailsLink.on('click', function() {
+                    //console.log(movieInfo);
+                    var link = $(this);
+                    //only adds the details table, defaults to hidden
+                    displayMovieDetails(this, movieInfo.imdbID);
+                });
+                detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
+                row.append($("<td class='basic-movie-info v-align-top'>").append($("<div>").append(detailsLink)));
+
+                //thirdly, add placement TD for buttons
+                row.append($("<td class='button-container'>"));
+            });
+            //update paging info to table footer
+            updateFooter(data, searchParams);
+        }
+        else if(searchParams['t']){
             //console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
             //create a row per matched movie
             var row = $("<tr>").addClass("search-result").appendTo(tbody);
@@ -117,8 +167,8 @@ function onMovieSearchResponse(data, searchParams) {
             var imageSource = DEFAULT_MOVIE_IMAGE;
 
             //default size is 300, only do this if an image was provided
-            if(movieInfo.Poster !== 'N/A') {
-                imageSource = resizeImageTo(movieInfo.Poster, 100);
+            if(data.Poster !== 'N/A') {
+                imageSource = resizeImageTo(data.Poster, 100);
             }
             
             //add a movie poster image
@@ -140,26 +190,29 @@ function onMovieSearchResponse(data, searchParams) {
                 //console.log(movieInfo);
                 var link = $(this);
                 //only adds the details table, defaults to hidden
-                displayMovieDetails(this, movieInfo.imdbID);
+                displayMovieDetails(this, data.imdbID);
             });
-            detailsLink.text(movieInfo.Title + " (" + movieInfo.Year + ")");
+            detailsLink.text(data.Title + " (" + data.Year + ")");
             row.append($("<td class='basic-movie-info v-align-top'>").append($("<div>").append(detailsLink)));
 
             //thirdly, add placement TD for buttons
             row.append($("<td class='button-container'>"));
-        });
-
-        //update paging info to table footer
-        updateFooter(data, searchParams);
+        }
+       
+        
 
         //display the built table of movie results
         searchResults.removeClass('hide');
     }
     //OMDB considers the search term invalid
+    //If a search returns a "too many results" error, it re-attmpts a
+    //title search instead. 
     else {
         var searchError = $('#search-error');
         //simply display the error text OMDB provided
-        searchError.html(data.Error);
+        if(data.Error == "Too many results."){
+            newMovieSearch('t');
+        }
         searchError.removeClass('hide');
     }
 }
