@@ -70,7 +70,7 @@ function searchForMovie(searchParams, isNewSearch) {
     }
 
     //display search term
-    $("#search-term").text('Results for: ' + searchParams['s']);
+    $("#search-term").text("Searching for: '" + searchParams['s'] + "'");
 
     $.ajax({
         url: endpoint,
@@ -101,6 +101,11 @@ function onMovieSearchResponse(data, searchParams) {
     //marks if OMDB found the search term to be valid
     if(data.Response && data.Response === "True") {
         //console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
+        
+        //update top field text with a count of total results
+        var topTextField = $("#search-term");
+
+        topTextField.text(topTextField.text() + ", Results: " + data.totalResults);
 
         //table containing search results
         var searchResults = $("#search-results");
