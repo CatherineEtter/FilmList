@@ -212,8 +212,17 @@ width: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #FFFFFF;
+    margin: 20px;
+    width: 100%;
 }
 #movie-listing {
     margin: 10px;
     max-width: 80%;
+}
+#movie-listing-container .square-content-container {
+    margin: 10px;
+    padding: 2%;
+    height: 90%;
+    width: 50%;
 }
