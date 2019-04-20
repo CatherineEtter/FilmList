@@ -127,6 +127,12 @@ function consoleOutputPromiseArray(promiseArray){
         }
     });
 }
+function displayFilteredGenreCatalog(genreType) {
+
+}
+function displayFilteredYearCatalog(year) {
+    
+}
 function displayUnfilteredCatalog() {
     var catalogPromise = getWholeCatalog(catalogCID(),'asc');
     catalogPromise.then(function(array) {
@@ -143,28 +149,12 @@ function displayCatalog(catArray) {
         for(var key in catArray[i]) {
             //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
             listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
-            listBuilder += (' <h4> ' + catArray[i]['Title']+ ' </h4>');
+            listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
             listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
-            listBuilder += (' <h4> ' + catArray[i]['Year']+ ' </h4>');
+            listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
             listBuilder += (' </div> ');
         }
         console.log(listBuilder);
         $( "#movie-listing-container" ).append(listBuilder);
-        /*
-        listBuilder = ('<div class="squareImage"' + catArray[i]. + '>');
-        listBuilder += ('</div>');
-        */
     }
-
-    /*
-    var movielist = ( '<ul id="movie-listing" class="list-group list-group-flush">' );
-    //Do something with the query, example below
-
-    movielist += ('<li class="list-group-item"> Test 1 </li>');
-    movielist += ('<li class="list-group-item"> Test 2 </li>');
-    movielist += ('<li class="list-group-item"> Test 3 </li>');
-    movielist += ('</ul');
-*/
-    
-    //$( "#movie-listing-container" ).append(movielist);
 }
