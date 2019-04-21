@@ -1,18 +1,29 @@
 function RegisterForm(){
-    var email = document.getElementById("user_field").value;
-    var initialPassword = document.getElementById("pass_field1").value;
-    var confirmationPassword = document.getElementById("pass_field2").value;
+    var errorField = $("#register-error");
+
+    //clear any lingering error messages
+    errorField.text();
+
+    var email = $("#user_field").val();
+    var initialPassword = $("#pass_field1").val();
+    var confirmationPassword = $("#pass_field2").val();
 
     if (initialPassword === "") {
-        alert("A password is required");
+        errorField.text("A password is required");
     } else if (initialPassword !== confirmationPassword) {
-        alert("Passwords do not match, please try again.");
+        errorField.text("Passwords do not match");
     } else {
-        firebase.auth().createUserWithEmailAndPassword(email, initialPassword).catch(function(error) {
+        firebase.auth().createUserWithEmailAndPassword(email, initialPassword)
+        .then(function() {
+            console.log("user registered successfully");
+    
+            refreshAccountNavigation();
+            closeRegisterForm();
+        }).catch(function(error) {
             var errorCode = error.code;
             var errorMessage = error.message;
-
-            alert("Error: " + errorMessage);
+            console.log("failed user registration, response:" + error);
+            errorField.text(errorMessage);
         });
     }
 }

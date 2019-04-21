@@ -25,7 +25,7 @@
         <script type="text/javascript" src="src/account.js"></script>
         <script type="text/javascript">
             $().ready(function() {
-                initializeFirebase();
+                initializeFirebase(refreshAccountNavigation);
             });
         </script>
     </head>
@@ -51,10 +51,10 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
-                            <button class="btn" onclick="openLoginForm()">Login</button>
-                            <button class="btn" onclick="openRegisterForm()">Register</button>
-                            <button class="btn" onClick="logoutUser()">Logout</button>
-                            <button class="btn"><a href="account.html" id="nav-manageAccount">Manage</a></button>
+                            <button class="btn hide" id="login-btn" onclick="openLoginForm()">Login</button>
+                            <button class="btn hide" id="register-btn" onclick="openRegisterForm()">Register</button>
+                            <button class="btn hide" id="manage-btn" onclick="document.location='account.html'">Manage</button>
+                            <button class="btn hide" id="logout-btn" onClick="logoutUser()">Logout</button>
                         </div>
                     </div>
                 </div>

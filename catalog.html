@@ -23,9 +23,9 @@
         <script type="text/javascript" src="src/catalog.js"></script>
         <script type="text/javascript">
             $().ready(function() {
-                initializeFirebase();
-                firebase.auth().onAuthStateChanged(function (user) {
-                    if (user) {
+                initializeFirebase(function() {
+                    refreshAccountNavigation();
+                    if (firebase.auth().currentUser) {
                         displayUnfilteredCatalog();
                     }
                 });
@@ -56,8 +56,10 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
-                            <button class="btn" onclick="openLoginForm()">Login</button>
-                            <button class="btn">Logout</button>
+                            <button class="btn hide" id="login-btn" onclick="openLoginForm()">Login</button>
+                            <button class="btn hide" id="register-btn" onclick="openRegisterForm()">Register</button>
+                            <button class="btn hide" id="manage-btn" onclick="document.location='account.html'">Manage</button>
+                            <button class="btn hide" id="logout-btn" onClick="logoutUser()">Logout</button>
                         </div>
                     </div>
                 </div>
@@ -102,6 +104,54 @@
             <button class="btn" type='button' onclick="testAuth()">TEST AUTH</button>
             <button class="btn" type='button' onclick="testGetCatalog(); false;">LOAD CATALOG</button>
             <button class="btn btn-primary" type="button" onclick="displayUnfilteredCatalog();">GET THE CATALOG</button>
+        </div>
+        <div class="form-popup hide" id="login-wrapper">
+            <div class="form-container">
+                <div class="container">
+                    <img src="images/logo.png" width="300">
+                    <h1>Login</h1>
+                </div>
+                <div class="container">
+                    <div class="form-group">
+                        <p id="login-error" class="error"></p>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Username" name="username" id="emailInput">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Password" name="password"
+                            id="passwordInput">
+                    </div>
+                    <button class="btn btn-success" type="submit" onclick="loginUser()">Login</button>
+                    <button class="btn btn-secondary" onclick="closeLoginForm()">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-popup hide" id="register-wrapper">
+            <form class="form-container">
+                <div class="container">
+                    <img src="images/logo.png" width="300">
+                    <h1>Register</h1>
+                </div>
+                <div class="container">
+                    <div class="form-group">
+                        <p id="register-error" class="error"></p>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Username" name="username" id="user_field">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Enter Your Password" name="password"
+                            id="pass_field1">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Enter Password Again" name="password"
+                            id="pass_field2">
+                    </div>
+                    <button class="btn btn-success" type="button" onclick="RegisterForm();">Register</button>
+                    <button class="btn btn-secondary" type="button" onclick="closeRegisterForm();">Close</button>
+                </div>
+            </form>
         </div>
     </body>
 </html>

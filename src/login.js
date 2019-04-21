@@ -1,20 +1,30 @@
 function loginUser() {
-    var email = document.getElementById("emailInput").value
-    var password = document.getElementById("passwordInput").value
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    //clear any error messages
+    $("#login-error").text();
+
+    var email = $("#emailInput").val();
+    var password = $("#passwordInput").val();
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(function() {
+        console.log("user logged in successfully");
+
+        refreshAccountNavigation();
+        closeLoginForm();
+    }
+    ).catch(function(error) {
         //error handling
-        alert("ERROR: " + error);
+        console.log("failed signin, response:" + error);
+        $("#login-error").text(error);
     });
-    
-    alert("Welcome " + email + "!");
-    closeLoginForm();
 }
 
 function logoutUser() {
     firebase.auth().signOut().then(function() {
-        console.log("Successfully signed user out");
-        //alert("You have been signed out.");
-        location.reload();
+        console.log("Successfully signed out user");
+        
+        //go back to main page
+        document.location='index.html';
     }, function(error) {
         alert(error.message);
     })
@@ -55,6 +65,9 @@ function addUserToDatabase(user) {
 }
 
 function closeLoginForm() {
-    $("#login-wrapper").attr("hidden",true);
+    //clear any error messages
+    $("#login-error").text();
+
+    $("#login-wrapper").addClass("hide");
     return false;
 }
