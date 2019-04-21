@@ -56,14 +56,24 @@ function initializeFirebase(onStateChangedCallback) {
 function catalogCID(){
     var db = firebase.firestore();
     var users = db.collection("users");
-    var collectionId = "users/"+firebase.auth().currentUser.uid+"/catalog";
-    return db.collection(collectionId);
+    if(firebase.auth().currentUser != null){
+        var collectionId = "users/"+firebase.auth().currentUser.uid+"/catalog";
+        return db.collection(collectionId);
+    }else{
+        alert("Can't access database, please log in.");
+        return null;
+    }
 }
 
 //returns the queue collection ID
 function queueCID(){
     var db = firebase.firestore();
     var users = db.collection("users");
-    var collectionId = "users/"+firebase.auth().currentUser.uid+"/queue";
-    return db.collection(collectionId);
+    if(firebase.auth().currentUser != null){
+        var collectionId = "users/"+firebase.auth().currentUser.uid+"/queue";
+        return db.collection(collectionId);
+    }else{
+        alert("Can't access database, please log in.");
+        return null;
+    }
 }
