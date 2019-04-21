@@ -11,7 +11,7 @@
  */
 
 /* enables searching of movies from OMDb */
-var endpoint = 'http://www.omdbapi.com/';
+var endpoint = 'https://www.omdbapi.com/';
 var apiKey = 'd0507337';
 
 //TODO current 32x44 is too small
