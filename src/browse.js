@@ -111,7 +111,7 @@ function onMovieSearchResponse(data, searchParams) {
         //update top field text with a count of total results
         var topTextField = $("#search-term");
 
-        topTextField.text(topTextField.text() + ", Results: " + data.totalResults);
+        topTextField.text(topTextField.text() + ", Total: " + data.totalResults);
 
         //table containing search results
         var searchResults = $("#search-results");
