@@ -10,18 +10,12 @@
  *      Code for adding movies to the google Firebase Database
  */
 
-function testAuth(){
-    if (firebase.auth().currentUser !== null) {
-        console.log("user id: " + firebase.auth().currentUser.uid);
-    }
-}
-
 function titleSearch(){
     var CID = catalogCID();
     var titleInput = $("#searchbar").val().trim();
     if(titleInput !== '') {
         console.log("filtering for title = " + titleInput);
-        consoleOutputPromiseArray(arrayify(CID.where("Title", "==", titleInput)));
+        displayCatalog(arrayify(CID.where("Title", "==", titleInput)));
     }
 }
 
@@ -105,29 +99,6 @@ function exclusiveSearchCatalog(){
 
 }
 
-function testGetCatalog(){
-    console.log("test");
-    //var catalogQ = filterGenre(catalogCID(), "Comedy");
-    //consoleOutputPromiseArray(catalogQ);
-    //catalogQ = getWholeCatalog(catalogCID(), "asc");
-    //consoleOutputPromiseArray(catalogQ);
-    //catalogQ = filterYear(catalogCID(), "1999");
-    //consoleOutputPromiseArray(catalogQ);
-    //var CID = catalogCID();
-    //CID = CID.where("Genre","==","Comedy");
-    //var ary = arrayify(CID);
-    //consoleOutputPromiseArray(ary);
-    /** /
-    //DOESNT WORK.
-    var CID = catalogCID();
-    CID = CID.where("Actors", "array-contains", "Billy Crystal");
-    //CID = CID.where("Genre", "==", 'Drama');
-    var ary = arrayify(CID);
-    consoleOutputPromiseArray(ary);
-    //*/
-
-}
-
 //returns year query
 function filterYear(CID, year){
     return arrayify(CID.where("Year", "==", year));
@@ -173,47 +144,47 @@ function mergePromiseArrays(arrayOne, arrayTwo){
     });
 }
 
-function intersectPromiseArraysTwo(ary1, ary2){
-    return ary1.then(function(array1){
-        return ary2.then(function(array2){
-            var newArray = array2.filter(value => array1.includes(value));
-            console.log(newArray);
-            return newArray;
-        });
-    });
-}
+// function intersectPromiseArraysTwo(ary1, ary2){
+//     return ary1.then(function(array1){
+//         return ary2.then(function(array2){
+//             var newArray = array2.filter(value => array1.includes(value));
+//             console.log(newArray);
+//             return newArray;
+//         });
+//     });
+// }
 
 
-function intersectPromiseArrays(arrayOne, arrayTwo){
-    console.log(arrayOne);
-    return arrayOne.then(function(ary1){
-        return arrayTwo.then(function(ary2){
-            //console.log(ary1);
-            //return ary1.concat(ary2);
+// function intersectPromiseArrays(arrayOne, arrayTwo){
+//     console.log(arrayOne);
+//     return arrayOne.then(function(ary1){
+//         return arrayTwo.then(function(ary2){
+//             //console.log(ary1);
+//             //return ary1.concat(ary2);
 
-            var ary1Index = ary2Index= 0;
-            var result = [];
+//             var ary1Index = ary2Index= 0;
+//             var result = [];
 
-            while( ary1Index < arrayOne.length && ary2Index < arrayTwo.length ){
-                if(ary1[ary1Index] < ary2[ary2Index] ){
-                    ary1Index++;
-                }
-                else if (ary1[ary1Index] > ary2[ary2Index] )
-                {
-                    ary2Index++;
-                }
-                else /* they're equal */
-                {
-                    result.push(ary1[ary1Index]);
-                    ary1Index++;
-                    ary2Index++;
-                }
-            }
+//             while( ary1Index < arrayOne.length && ary2Index < arrayTwo.length ){
+//                 if(ary1[ary1Index] < ary2[ary2Index] ){
+//                     ary1Index++;
+//                 }
+//                 else if (ary1[ary1Index] > ary2[ary2Index] )
+//                 {
+//                     ary2Index++;
+//                 }
+//                 else /* they're equal */
+//                 {
+//                     result.push(ary1[ary1Index]);
+//                     ary1Index++;
+//                     ary2Index++;
+//                 }
+//             }
 
-            return result;
-        });
-    });
-}
+//             return result;
+//         });
+//     });
+// }
 
 function consoleOutputPromiseArray(promiseArray){
     promiseArray.then(function(ary){
@@ -222,31 +193,30 @@ function consoleOutputPromiseArray(promiseArray){
         }
     });
 }
-function displayFilteredGenreCatalog(genreType) {
-
-}
-function displayFilteredYearCatalog(year) {
-    
-}
 
 function displayUnfilteredCatalog() {
     var catalogPromise = getWholeCatalog(catalogCID(),'asc');
     displayCatalog(catalogPromise);
 }
+
 //TODO make functions for each filter to get the filtered catalog and display it
 //takes the catalog of movie information and displays them to the user in a list
-function displayCatalog(catArray) {
+function displayCatalog(catalogPromiseArray) {
     $( "#movie-listing-container" ).empty();
     //console.log(catArray);
-    var listBuilder;
-    for(var i = 0; i < catArray.length; i++) {
-        for(var key in catArray[i]) {
-            //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
-            listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
-            listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
-            listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
-            listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
-            listBuilder += (' </div> ');
+    catalogPromiseArray.then(function(catArray) {
+        var listBuilder;
+        for(var i = 0; i < catArray.length; i++) {
+            for(var key in catArray[i]) {
+                //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
+                listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
+                listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
+                listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
+                listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
+                listBuilder += (' </div> ');
+            }
+            console.log(listBuilder);
+            $( "#movie-listing-container" ).append(listBuilder);
         }
-    }
+    });
 }
