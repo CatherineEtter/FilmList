@@ -142,8 +142,8 @@ function displayUnfilteredCatalog() {
 //TODO make functions for each filter to get the filtered catalog and display it
 //takes the catalog of movie information and displays them to the user in a list
 function displayCatalog(catArray) {
-    //console.log(movielist);
-    console.log(catArray);
+    $( "#movie-listing-container" ).empty();
+    //console.log(catArray);
     var listBuilder;
     for(var i = 0; i < catArray.length; i++) {
         for(var key in catArray[i]) {
