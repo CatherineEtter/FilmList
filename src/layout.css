@@ -142,11 +142,7 @@ html,body {
 }
 /*** Filter ***/
 #btn-collapse-filter {
-    width: 30%;
-    padding: 0px;
     color: black;
-    border: 0;
-    margin: 0px;
     background-color: #5bc5fa;
 }
 #movie-filter-box {
