@@ -18,14 +18,16 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-        <script type="text/javascript" src="src/account.js"></script>
         <script type="text/javascript" src="src/filmlist.js"></script>
+        <script type="text/javascript" src="src/register.js"></script>
+        <script type="text/javascript" src="src/login.js"></script>
+        <script type="text/javascript" src="src/account.js"></script>
         <script type="text/javascript" src="src/catalog.js"></script>
         <script type="text/javascript">
             $().ready(function() {
-                initializeFirebase();
-                firebase.auth().onAuthStateChanged(function (user) {
-                    if (user) {
+                initializeFirebase(function() {
+                    refreshAccountNavigation();
+                    if (firebase.auth().currentUser) {
                         displayUnfilteredCatalog();
                     }
                 });
@@ -38,7 +40,13 @@
         <div class="header-wrapper">
             <header id="header" class="jumbotron jumbotron-fluid text-center">
                 <!--TODO: Combine title and logo in a single image-->
-                <h1 class="logo"><a href="index.html"><img src="images/logo.png" width="90" height="53" alt="logo" /></a> <span class="alt-logo">Film List</span></h1>
+                <h1 class="logo">
+                    <a href="index.html">
+                        <img src="images/logo.png" width="90" height="53" alt="logo" />
+                    </a>
+                    <div class="alt-logo">Film List</div>
+                    <div class="tagline">Know What You've Seen</div>
+                </h1>
             </header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div id="nav-wrapper" class="container-fluid">
@@ -50,8 +58,10 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
-                            <button class="btn" onclick="openLoginForm()">Login</button>
-                            <button class="btn">Logout</button>
+                            <button class="btn hide" id="login-btn" onclick="openLoginForm()">Login</button>
+                            <button class="btn hide" id="register-btn" onclick="openRegisterForm()">Register</button>
+                            <button class="btn hide" id="manage-btn" onclick="document.location='account.html'">Manage</button>
+                            <button class="btn hide" id="logout-btn" onClick="logoutUser()">Logout</button>
                         </div>
                     </div>
                 </div>
@@ -96,6 +106,54 @@
             <button class="btn" type='button' onclick="testAuth()">TEST AUTH</button>
             <button class="btn" type='button' onclick="testGetCatalog(); false;">LOAD CATALOG</button>
             <button class="btn btn-primary" type="button" onclick="displayUnfilteredCatalog();">GET THE CATALOG</button>
+        </div>
+        <div class="form-popup hide" id="login-wrapper">
+            <div class="form-container">
+                <div class="container">
+                    <img src="images/logo.png" width="300">
+                    <h1>Login</h1>
+                </div>
+                <div class="container">
+                    <div class="form-group">
+                        <p id="login-error" class="error"></p>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Username" name="username" id="emailInput">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Password" name="password"
+                            id="passwordInput">
+                    </div>
+                    <button class="btn btn-success" type="submit" onclick="loginUser()">Login</button>
+                    <button class="btn btn-secondary" onclick="closeLoginForm()">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-popup hide" id="register-wrapper">
+            <form class="form-container">
+                <div class="container">
+                    <img src="images/logo.png" width="300">
+                    <h1>Register</h1>
+                </div>
+                <div class="container">
+                    <div class="form-group">
+                        <p id="register-error" class="error"></p>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="text" placeholder="Username" name="username" id="user_field">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Enter Your Password" name="password"
+                            id="pass_field1">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" placeholder="Enter Password Again" name="password"
+                            id="pass_field2">
+                    </div>
+                    <button class="btn btn-success" type="button" onclick="RegisterForm();">Register</button>
+                    <button class="btn btn-secondary" type="button" onclick="closeRegisterForm();">Close</button>
+                </div>
+            </form>
         </div>
     </body>
 </html>

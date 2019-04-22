@@ -235,23 +235,18 @@ function displayUnfilteredCatalog() {
 }
 //TODO make functions for each filter to get the filtered catalog and display it
 //takes the catalog of movie information and displays them to the user in a list
-function displayCatalog(catalogPromiseArray) {
-    //console.log(movielist);
-    //console.log(catArray);
+function displayCatalog(catArray) {
     $( "#movie-listing-container" ).empty();
-    catalogPromiseArray.then(function(catArray) {
-        var listBuilder;
-        for(var i = 0; i < catArray.length; i++) {
-            for(var key in catArray[i]) {
-                //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
-                listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
-                listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
-                listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
-                listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
-                listBuilder += (' </div> ');
-            }
-            console.log(listBuilder);
-            $( "#movie-listing-container" ).append(listBuilder);
+    //console.log(catArray);
+    var listBuilder;
+    for(var i = 0; i < catArray.length; i++) {
+        for(var key in catArray[i]) {
+            //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
+            listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
+            listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
+            listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
+            listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
+            listBuilder += (' </div> ');
         }
-    });
+    }
 }

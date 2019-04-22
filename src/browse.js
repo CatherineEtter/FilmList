@@ -11,7 +11,7 @@
  */
 
 /* enables searching of movies from OMDb */
-var endpoint = 'http://www.omdbapi.com/';
+var endpoint = 'https://www.omdbapi.com/';
 var apiKey = 'd0507337';
 
 //TODO current 32x44 is too small
@@ -72,9 +72,9 @@ function searchForMovie(searchParams, isNewSearch) {
 
     //display search term
     if(searchParams['s']){
-        $("#search-term").text('Results for: ' + searchParams['s']);
+        $("#search-term").text("Results for: '" + searchParams['s'] + "'");
     }else if(searchParams['t']){
-        $("#search-term").text('Results for: ' + searchParams['t']);
+        $("#search-term").text("Results for: '" + searchParams['t'] + "'");
     }
 
     $.ajax({
@@ -107,6 +107,11 @@ function onMovieSearchResponse(data, searchParams) {
     console.log(data);
     if(data.Response && data.Response === "True") {
         //console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
+        
+        //update top field text with a count of total results
+        var topTextField = $("#search-term");
+
+        topTextField.text(topTextField.text() + ", Total: " + data.totalResults);
 
         //table containing search results
         var searchResults = $("#search-results");

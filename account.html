@@ -21,11 +21,10 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
         <script type="text/javascript" src="src/filmlist.js"></script>
-        <script type="text/javascript" src="src/login.js"></script>
         <script type="text/javascript" src="src/account.js"></script>
         <script type="text/javascript">
             $().ready(function() {
-                initializeFirebase();
+                initializeFirebase(refreshAccountNavigation);
             });
         </script>
     </head>
@@ -33,7 +32,13 @@
         <div class="header-wrapper">
             <header id="header" class="jumbotron jumbotron-fluid text-center">
                 <!--TODO: Combine title and logo in a single image-->
-                <h1 class="logo"><a href="index.html"><img src="images/logo.png" width="90" height="53" alt="logo" /></a> <span class="alt-logo">Film List</span></h1>
+                <h1 class="logo">
+                    <a href="index.html">
+                        <img src="images/logo.png" width="90" height="53" alt="logo" />
+                    </a>
+                    <div class="alt-logo">Film List</div>
+                    <div class="tagline">Know What You've Seen</div>
+                </h1>
             </header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div id="nav-wrapper" class="container-fluid">
@@ -45,10 +50,10 @@
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
                         <div class="dropdown-menu">
-                            <button class="btn" onclick="openLoginForm()">Login</button>
-                            <button class="btn" onclick="openRegisterForm()">Register</button>
-                            <button class="btn" onClick="logoutUser()">Logout</button>
-                            <button class="btn"><a href="account.html" id="nav-manageAccount">Manage</a></button>
+                            <button class="btn hide" id="login-btn" onclick="openLoginForm()">Login</button>
+                            <button class="btn hide" id="register-btn" onclick="openRegisterForm()">Register</button>
+                            <button class="btn hide" id="manage-btn" onclick="document.location='account.html'">Manage</button>
+                            <button class="btn hide" id="logout-btn" onClick="logoutUser()">Logout</button>
                         </div>
                     </div>
                 </div>

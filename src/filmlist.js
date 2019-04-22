@@ -1,19 +1,34 @@
 function openLoginForm() {
-    $("#login-wrapper").removeAttr("hidden");
+    //clear any lingering error messages
+    $("#login-error").text();
+    
+    $("#login-wrapper").removeClass("hide");
+
+    //set focus on first input field
+    $("#emailInput").focus();
 }
 function closeLoginForm() {
-    $("#login-wrapper").attr("hidden",true);
+    $("#login-wrapper").addClass("hide");
 }
 
 function openRegisterForm() {
-    $("#register-wrapper").removeAttr("hidden");
+    //clear any lingering error messages
+    $("#register-error").text();
+
+    $("#register-wrapper").removeClass("hide");
+
+    //set focus on first input field
+    $("#user_field").focus();
+    
     return false;
 }
 function closeRegisterForm() {
-    $("#register-wrapper").attr("hidden",true);
+    $("#register-wrapper").addClass("hide");
     return false;
 }
 
+//initialize firebase to point to the proper project.
+//it's important to call this on page load.
 function initializeFirebase(onStateChangedCallback) {
     // Initialize Firebase
     var config = {
@@ -50,6 +65,21 @@ function initializeFirebase(onStateChangedCallback) {
             onStateChangedCallback();
         }
     });
+}
+
+//enables the display of account-related navigation
+//based on the user's current login status.
+function refreshAccountNavigation() {
+    //determine if the user is logged in
+    if(firebase.auth().currentUser) {
+        console.log("user has been logged in, enabling Manage and Logout");
+        $("#manage-btn").removeClass("hide");
+        $("#logout-btn").removeClass("hide");
+    } else {
+        console.log("user has not yet logged in, enabling Login and Register");
+        $("#login-btn").removeClass("hide");
+        $("#register-btn").removeClass("hide");
+    }
 }
 
 //returns the catalog collection ID
