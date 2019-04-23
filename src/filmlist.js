@@ -38,7 +38,8 @@ function initializeFirebase(onStateChangedCallback) {
             console.log("emailVerified: " + user.emailVerified);
             console.log("uid: " + user.uid);
             setUserProfile(user);
-    
+            var myAccountTabHeader = document.getElementById("navbarDropdown")
+            myAccountTabHeader.innerHTML = user.email
             //user may have come in via registration modal, so hide it
             closeRegisterForm();
         } else {

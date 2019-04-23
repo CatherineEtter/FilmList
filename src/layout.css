@@ -55,6 +55,11 @@ html,body {
     display: block;
     text-decoration: none;
 }
+
+.dropdown-menu {
+    width: 50px;
+}
+
 .active {
     /*color: #5bc5fa;*/
     background-color: rgba(0,0,0,.7);
