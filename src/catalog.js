@@ -26,20 +26,22 @@ function displayUnfilteredCatalog() {
 function displayCatalog(catalogPromiseArray) {
     $( "#movie-listing-container" ).empty();
     //console.log(catArray);
-    var listBuilder;
-    for(var i = 0; i < catArray.length; i++) {
-        for(var key in catArray[i]) {
-            //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
-            listBuilder = (' <div class="square-content-container" style="background: #282828" onclick="displayMovieDetails(this)" imdbID=" ' + catArray[i]['imdbID'] + ' ">');
-            listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
-            listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
-            listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
-            listBuilder += (' <div class="movie-details-container"></div>');
-            listBuilder += (' </div> ');
+    catalogPromiseArray.then(function(catArray){
+        var listBuilder;
+        for(var i = 0; i < catArray.length; i++) {
+            for(var key in catArray[i]) {
+                //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
+                listBuilder = (' <div class="square-content-container" style="background: #282828" onclick="displayMovieDetails(this)" imdbID=" ' + catArray[i]['imdbID'] + ' ">');
+                listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
+                listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
+                listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
+                listBuilder += (' <div class="movie-details-container"></div>');
+                listBuilder += (' </div> ');
+            }
+            //console.log(listBuilder);
+            $( "#movie-listing-container" ).append(listBuilder);
         }
-        //console.log(listBuilder);
-        $( "#movie-listing-container" ).append(listBuilder);
-    }
+    });
 }
 //Gets the event object whenever a movie is clicked
 function displayMovieDetails(element) {
