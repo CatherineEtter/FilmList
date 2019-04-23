@@ -22,9 +22,16 @@
         <script type="text/javascript" src="src/register.js"></script>
         <script type="text/javascript" src="src/login.js"></script>
         <script type="text/javascript" src="src/account.js"></script>
+        <script type="text/javascript" src="src/filter.js"></script>
+        <script type="text/javascript" src="src/queue.js"></script>
         <script type="text/javascript">
             $().ready(function() {
-                initializeFirebase(refreshAccountNavigation);
+                initializeFirebase(function() {
+                    refreshAccountNavigation();
+                    if (firebase.auth().currentUser) {
+                        displayUnfilteredQueue();
+                    }
+                });
             });
         </script>
     </head>
@@ -34,10 +41,10 @@
                 <!--TODO: Combine title and logo in a single image-->
                 <h1 class="logo">
                     <a href="index.html">
-                        <img src="images/logo.png" width="90" height="53" alt="logo" />
+                        <img src="images/logo_final.png" width="12%" height="12%" alt="logo" />
                     </a>
                     <div class="alt-logo">Film List</div>
-                    <div class="tagline">Know What You've Seen</div>
+                    <div class="tagline">Know What You Want to See</div>
                 </h1>
             </header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -45,7 +52,7 @@
                     <ul class="nav navbar-nav">
                         <li class="nav-item"><a href="index.html" class="nav-opt" id="nav-browse">Browse</a></li>
                         <li class="nav-item"><a href="catalog.html" class="nav-opt" id="nav-catalog">Catalog</a></li>
-                        <li class="nav-item active"><a href="moviequeue.html" class="nav-opt" id="nav-moviequeue">Queue</a></li>
+                        <li class="nav-item active"><a href="queue.html" class="nav-opt" id="nav-moviequeue">Queue</a></li>
                     </ul>
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">My Account</a>
@@ -59,23 +66,30 @@
                 </div>
             </nav>
         </div>
-        <div class="content-wrapper">
+        <div id="queue-wrapper" class="content-wrapper">
             <div id="filter-search-wrapper">
                 <div class="search-wrapper">
-                <input type="text" name="movie-search" placeholder="Enter movie title..." id="searchbar">
-                <!--TODO: Replace "Search" with a search icon instead-->
-                <button type="submit" class="btn btn-secondary"><i class="fas fa-search"></i></button>
+                    <form>
+                        <input type="text" name="movie-search" placeholder="Search for a title..." id="searchbar">
+                        <!--TODO: Replace "Search" with a search icon instead-->
+                        <button type="button" id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button>
+                        <button type="submit" class="btn btn-secondary" onclick="displayQueue(titleSearch(getWholeQueue('asc'))); return false;"><i class="fas fa-search"></i></button>
+                    </form>
                 </div>
-                <button id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button> 
                 <div id="movie-filter-box" class="collapse">
                     <form>
-                        <div class="form-group">
-                            <label for="rating-input">Rating</label>
-                            <input id="rating-input" type="number" name="" min="1" max="10">
+                        <div class="form-group">                        
                             <label for="actor-input">Actor</label>
                             <input id="actor-input" type="text" name="">
                             <label for="director-input">Director</label>
                             <input id="director-input" type="text" name="">
+                            <br>
+                            <label for="start-year-input">Start Year</label>
+                            <input id="start-year-input" type="number" name="" placeholder="1900" min="1888" max="9999">
+                            <label for="end-year-input">End Year</label>
+                            <input id="end-year-input" type="number" name="" placeholder="1900" min="1888" max="9999">
+                            <label for="rating-input">Rating</label>
+                            <input id="rating-input" type="number" name="" min="1" max="10">
                         </div>
                         <div class="form-group">
                             <label for="genre-select">Genres</label>
@@ -86,19 +100,36 @@
                                 <option>Drama</option>
                                 <option>Horror</option>
                                 <option>Sci-Fi</option>
+                                <option>Documentary</option>
                                 <option>Western</option>
+                                <option>Mystery</option>
+                                <option>Thriller</option>
+                                <option>Family</option>
+                                <option>Animation</option>
+                                <option>Sport</option>
+                                <option>War</option>
+                                <option>Romance</option>
+                                <option>Music</option>
                             </select>
                         </div>
+                        <button type="submit" class="btn btn-secondary" onclick="displayQueue(exclusiveFilter(getWholeQueue('asc'))); return false;">Filter Queue</button>
+                        <button type="reset" class="btn btn-secondary">Reset Filters</button>
                     </form>
-                    <button type="submit" class="btn btn-secondary">Filter</button>
                 </div>
             </div>
-        	<h1>Movie Queue Placeholder</h1>
+            <div id="movie-listing-container">
+            </div>
+            <!--<button class="btn btn-primary" type="button" onclick="displayUnfilteredQueue();">GET THE QUEUE</button>-->
         </div>
+        <footer id="footer">
+            <p>St. Mary's University Software Engineering Project, Spring 2019</p>
+            <p>Movie information provided by IMDB through the OMDB API</p>
+            <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
+        </footer>
         <div class="form-popup hide" id="login-wrapper">
             <div class="form-container">
                 <div class="container">
-                    <img src="images/logo.png" width="300">
+                    <img src="images/logo_final.png" width="300">
                     <h1>Login</h1>
                 </div>
                 <div class="container">
@@ -120,7 +151,7 @@
         <div class="form-popup hide" id="register-wrapper">
             <form class="form-container">
                 <div class="container">
-                    <img src="images/logo.png" width="300">
+                    <img src="images/logo_final.png" width="300">
                     <h1>Register</h1>
                 </div>
                 <div class="container">

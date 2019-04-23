@@ -1,32 +1,19 @@
-/**
- * catalog.js
- * FilmList Project
- * Software Engineering Class
- * Teacher: Carol Redfield
- * Programmers: Richard, Matt, Jeremy, Catherine, Colin, Manny
- * What's in this file: 
- *      Code for getting movies from the OMDB API
- *      Code for displaying the results pulled from the OMDB. 
- *      Code for adding movies to the google Firebase Database
- */
-
-//returns catalog sorted by time query
-//order must be "asc" or "desc"
-function getWholeCatalog(order){
-    return arrayify(catalogCID().orderBy("TimeAdded", order));
+function getWholeQueue(order){
+    return arrayify(queueCID().orderBy("TimeAdded", order));
 }
 
-function displayUnfilteredCatalog() {
-    var catalogPromise = getWholeCatalog('asc');
-    displayCatalog(catalogPromise);
+function displayUnfilteredQueue() {
+    console.log("Display Unfiltered Queue.")
+    var queuePromise = getWholeQueue('asc');
+    displayQueue(queuePromise);
 }
 
-//TODO make functions for each filter to get the filtered catalog and display it
-//takes the catalog of movie information and displays them to the user in a list
-function displayCatalog(catalogPromiseArray) {
+//TODO make functions for each filter to get the filtered queue and display it
+//takes the queue of movie information and displays them to the user in a list
+function displayQueue(queuePromiseArray) {
     $( "#movie-listing-container" ).empty();
     //console.log(catArray);
-    catalogPromiseArray.then(function(catArray){
+    queuePromiseArray.then(function(catArray) {
         var listBuilder;
         for(var i = 0; i < catArray.length; i++) {
             for(var key in catArray[i]) {
@@ -38,16 +25,17 @@ function displayCatalog(catalogPromiseArray) {
                 listBuilder += (' <div class="movie-details-container"></div>');
                 listBuilder += (' </div> ');
             }
-            //console.log(listBuilder);
+            console.log(listBuilder);
             $( "#movie-listing-container" ).append(listBuilder);
         }
     });
 }
-//Gets the event object whenever a movie is clicked
+
 function displayMovieDetails(element) {
     //alert(element);
     getMovieDetails(element);
 }
+
 //Handles the ajax call
 function getMovieDetails(element) {
     var apiKey = 'd0507337';
@@ -74,6 +62,7 @@ function getMovieDetails(element) {
         }
     });
 }
+
 function addMovieDetails(data,element) {
     var detailsSection = element.querySelector('.movie-details-container');
     console.log(element);
