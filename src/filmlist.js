@@ -70,6 +70,12 @@ function initializeFirebase(onStateChangedCallback) {
 //enables the display of account-related navigation
 //based on the user's current login status.
 function refreshAccountNavigation() {
+    //default to all being hidden
+    $("#login-btn").addClass("hide");
+    $("#register-btn").addClass("hide");
+    $("#manage-btn").addClass("hide");
+    $("#logout-btn").addClass("hide");
+
     //determine if the user is logged in
     if(firebase.auth().currentUser) {
         console.log("user has been logged in, enabling Manage and Logout");
