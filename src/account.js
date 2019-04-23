@@ -9,8 +9,8 @@ function setUserProfile(currentUser) {
         } else {
             nameLabel.innerText = currentUser.email;
         }
-        if (currentUser.photoUrl != null && currentUser.photoUrl != "") {
-            setImage(currentUser.photoUrl);
+        if (currentUser.photoURL != null && currentUser.photoURL != "") {
+            setImage(currentUser.photoURL);
         }
     }
 }
@@ -26,7 +26,7 @@ function changeImage() {
         var currentUser = firebase.auth().currentUser;
 
         currentUser.updateProfile({
-            photoUrl: url
+            photoURL: url
         }).then(function () {
             console.log("User image URL changed");
             setImage(url);
