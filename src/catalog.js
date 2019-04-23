@@ -81,31 +81,32 @@ function displayUnfilteredCatalog() {
 //takes the catalog of movie information and displays them to the user in a list
 function displayCatalog(catArray) {
     $( "#movie-listing-container" ).empty();
-    console.log(catArray);
+    //console.log(catArray);
     var listBuilder;
     for(var i = 0; i < catArray.length; i++) {
         for(var key in catArray[i]) {
             //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
-            listBuilder = (' <div class="square-content-container" style="background: #282828" onclick="displayMovieDetails(this)">');
+            listBuilder = (' <div class="square-content-container" style="background: #282828" onclick="displayMovieDetails(this)" imdbID=" ' + catArray[i]['imdbID'] + ' ">');
             listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
             listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
             listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
+            listBuilder += (' <div class="movie-details-container"></div>');
             listBuilder += (' </div> ');
         }
-        console.log(listBuilder);
+        //console.log(listBuilder);
         $( "#movie-listing-container" ).append(listBuilder);
     }
 }
 //Gets the event object whenever a movie is clicked
 function displayMovieDetails(element) {
-    alert(element);
-    getMovieDetails();
+    //alert(element);
+    getMovieDetails(element);
 }
 //Handles the ajax call
 function getMovieDetails(element) {
     var apiKey = 'd0507337';
     var endpoint = 'http://www.omdbapi.com/?apikey=' + apiKey;
-    var searchParams = "i=tt4154756";
+    var searchParams = "i=" + element.getAttribute("imdbID");
     $.ajax({
         url: endpoint,
         data: searchParams,
@@ -114,9 +115,9 @@ function getMovieDetails(element) {
                 searchError.html("Error: Daily request limit reached!");
             }
         },
-        success: function(returnedData,element) {
+        success: function(returnedData) {
             //console.log(returnedData);
-            addMovieDetails(returnedData);
+            addMovieDetails(returnedData,element);
         },
         complete: function () {
             //re-enable search button
@@ -128,6 +129,27 @@ function getMovieDetails(element) {
     });
 }
 function addMovieDetails(data,element) {
-    console.log("Add Movie Details");
+    var detailsSection = element.querySelector('.movie-details-container');
+    console.log(element);
+
+    if(detailsSection.innerHTML == "")
+    {
+        element.querySelector('.movie-details-container').append(data['Plot']);
+        //detailsSection.disabled = false;
+    }
+    else {
+        detailsSection.innerHTML = "";
+        detailsSection.disabled = true;
+        //detailsSection.empty();
+    }
+
+    //detailsSection.append(data['Plot']);
+    /*
+    var detailsBuilder;
+    detailsBuilder = ('<div class="movie-details">');
+    detailsBuilder += ('<p>' + data['Plot'] + '</p>');
+    detailsBuilder += ('</div>');
     console.log(data);
+    console.log(element);
+    */
 }
