@@ -34,7 +34,7 @@ function initializeFirebase(onStateChangedCallback) {
             //currentUser = user;
             console.log("displayName: " + user.displayName);
             console.log("email: " + user.email);
-            console.log("photoUrl: " + user.photoUrl);
+            console.log("photoUrl: " + user.photoURL);
             console.log("emailVerified: " + user.emailVerified);
             console.log("uid: " + user.uid);
             setUserProfile(user);
