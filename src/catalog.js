@@ -51,7 +51,7 @@ function displayMovieDetails(element) {
 //Handles the ajax call
 function getMovieDetails(element) {
     var apiKey = 'd0507337';
-    var endpoint = 'http://www.omdbapi.com/?apikey=' + apiKey;
+    var endpoint = 'https://www.omdbapi.com/?apikey=' + apiKey;
     var searchParams = "i=" + element.getAttribute("imdbID");
     $.ajax({
         url: endpoint,
