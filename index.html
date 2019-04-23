@@ -46,10 +46,10 @@
             <!--TODO: Combine title and logo in a single image-->
             <h1 class="logo">
                 <a href="index.html">
-                    <img src="images/logo.png" width="90" height="53" alt="logo" />
+                    <img src="images/logo_final.png" width="12%" height="12%" alt="logo" />
                 </a>
                 <div class="alt-logo">Film List</div>
-                <div class="tagline">Know What You've Seen</div>
+                <div class="tagline">See What You Find</div>
             </h1>
         </header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -57,7 +57,7 @@
                 <ul class="nav navbar-nav">
                     <li class="nav-item active"><a href="index.html" class="nav-opt" id="nav-browse">Browse</a></li>
                     <li class="nav-item"><a href="catalog.html" class="nav-opt" id="nav-catalog">Catalog</a></li>
-                    <li class="nav-item"><a href="moviequeue.html" class="nav-opt" id="nav-moviequeue">Queue</a></li>
+                    <li class="nav-item"><a href="queue.html" class="nav-opt" id="nav-moviequeue">Queue</a></li>
                 </ul>
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -75,9 +75,11 @@
     <div id="browser-wrapper" class="content-wrapper">
         <div class="search-wrapper">
             <div id="search-form">
-                <input type="text" id="movie-search" placeholder="Enter movie title...">
-                <button id="search-button" type="button" class="btn btn-secondary" onclick="newMovieSearch('s');"><i
-                        class="fas fa-search"></i></button>
+                <form>
+                    <input type="text" id="movie-search" placeholder="Enter movie title...">
+                    <button id="search-button" type="submit" class="btn btn-secondary" onclick="newMovieSearch('s'); return false;"><i
+                            class="fas fa-search"></i></button>
+                </form>
                 <div id="search-term"></div>
                 <div id="search-error"></div>
                 <div id="search-results-wrapper">
@@ -102,12 +104,13 @@
     </div>
     <footer id="footer">
         <p>St. Mary's University Software Engineering Project, Spring 2019</p>
+        <p>Movie information provided by IMDB through the OMDB API</p>
         <p>Catherine Etter | Richard Ogin | Jeremy Ramirez | Matthew Christman | Manuel Amaya | Colin Strong</p>
     </footer>
     <div class="form-popup hide" id="login-wrapper">
         <div class="form-container">
             <div class="container">
-                <img src="images/logo.png" width="300">
+                <img src="images/logo_final.png" width="300">
                 <h1>Login</h1>
             </div>
             <div class="container">
@@ -129,7 +132,7 @@
     <div class="form-popup hide" id="register-wrapper">
         <form class="form-container">
             <div class="container">
-                <img src="images/logo.png" width="300">
+                <img src="images/logo_final.png" width="300">
                 <h1>Register</h1>
             </div>
             <div class="container">

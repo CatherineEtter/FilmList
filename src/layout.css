@@ -113,7 +113,7 @@ html,body {
 .search-wrapper input{
     padding: 5px;
     min-width: 300px;
-    width: 60%;
+    width: 30%;
 }
 .search-wrapper .basic-movie-info {
     color: #000000;
@@ -191,6 +191,11 @@ width: 40%;
 .spacing {
     display: inline;
     margin-right: 1em;
+}
+
+#search-results{
+    width:100%;
+    align-content: left;
 }
 
 #search-footer-data > div {
