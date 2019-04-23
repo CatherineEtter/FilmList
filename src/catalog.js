@@ -25,20 +25,49 @@ function displayUnfilteredCatalog() {
 //takes the catalog of movie information and displays them to the user in a list
 function displayCatalog(catalogPromiseArray) {
     $( "#movie-listing-container" ).empty();
-    //console.log(catArray);
-    catalogPromiseArray.then(function(catArray) {
-        var listBuilder;
-        for(var i = 0; i < catArray.length; i++) {
-            for(var key in catArray[i]) {
-                //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
-                listBuilder = (' <div class="square-content-container" style="background: #282828"> ');
-                listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
-                listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
-                listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
-                listBuilder += (' </div> ');
+    console.log(catArray);
+    var listBuilder;
+    for(var i = 0; i < catArray.length; i++) {
+        for(var key in catArray[i]) {
+            //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
+            listBuilder = (' <div class="square-content-container" style="background: #282828" onclick="displayMovieDetails(this)">');
+            listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
+            listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
+            listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
+            listBuilder += (' </div> ');
+        }
+        console.log(listBuilder);
+        $( "#movie-listing-container" ).append(listBuilder);
+    }
+}
+//Gets the event object whenever a movie is clicked
+function displayMovieDetails(element) {
+    alert(element);
+    getMovieDetails();
+}
+function getMovieDetails() {
+    var endpoint = 'http://www.omdbapi.com/';
+    var apiKey = 'd0507337';
+    var searchParams = "tt4154756";
+    /*
+    $.ajax({
+        url: endpoint,
+        data: searchParams,
+        statusCode: {
+            401: function () {
+                searchError.html("Error: Daily request limit reached!");
             }
-            console.log(listBuilder);
-            $( "#movie-listing-container" ).append(listBuilder);
+        },
+        success: function(returnedData) {
+            console.log(returnedData);
+        },
+        complete: function () {
+            //re-enable search button
+            $(searchButton).prop('disabled', false);
+        },
+        error: function() {
+            searchError.html("Error: OMDB request failed");
         }
     });
+    */
 }
