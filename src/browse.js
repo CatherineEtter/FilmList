@@ -103,15 +103,14 @@ function searchForMovie(searchParams, isNewSearch) {
 //"searchParams" are what was sent to OMDB. can be reused
 //to query for the next page of search results.
 function onMovieSearchResponse(data, searchParams) {
-    //marks if OMDB found the search term to be valid
     console.log(data);
+
+    //marks if OMDB found the search term to be valid
     if(data.Response && data.Response === "True") {
         //console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
         
-        //update top field text with a count of total results
+        //this field will have the total results count appended
         var topTextField = $("#search-term");
-
-        topTextField.text(topTextField.text() + ", Total: " + data.totalResults);
 
         //table containing search results
         var searchResults = $("#search-results");
@@ -120,6 +119,9 @@ function onMovieSearchResponse(data, searchParams) {
 
         //iterate through each returned movie
         if(searchParams['s']){
+            //it was a broad search, so append the total result count
+            topTextField.text(topTextField.text() + ", Total: " + data.totalResults);
+
             $.each(data.Search, function(rowIndex, movieInfo) {
                 //console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
                 //create a row per matched movie
@@ -160,10 +162,11 @@ function onMovieSearchResponse(data, searchParams) {
                 //thirdly, add placement TD for buttons
                 row.append($("<td class='button-container'>"));
             });
-            //update paging info to table footer
-            updateFooter(data, searchParams);
         }
         else if(searchParams['t']){
+            //it was a narrow title search, so set the total result count to 1
+            topTextField.text(topTextField.text() + ", Total: 1");
+
             //console.log('adding search result ' + (rowIndex+1) + ' titled ' + movieInfo.Title);
             //create a row per matched movie
             var row = $("<tr>").addClass("search-result").appendTo(tbody);
@@ -203,15 +206,16 @@ function onMovieSearchResponse(data, searchParams) {
             //thirdly, add placement TD for buttons
             row.append($("<td class='button-container'>"));
         }
-       
-        
 
+        //update paging info to table footer
+        updateFooter(data, searchParams);
+        
         //display the built table of movie results
         searchResults.removeClass('hide');
     }
     //OMDB considers the search term invalid
-    //If a search returns a "too many results" error, it re-attmpts a
-    //title search instead. 
+    //If a search returns a "too many results" error, re-attempt a
+    //title search instead.
     else {
         var searchError = $('#search-error');
         //simply display the error text OMDB provided
@@ -219,6 +223,7 @@ function onMovieSearchResponse(data, searchParams) {
             newMovieSearch('t');
         }
         searchError.removeClass('hide');
+        searchError.text( data.Error ? data.Error : "Search failed for unknown reason" );
     }
 }
 
@@ -256,8 +261,15 @@ function resetFooter() {
 
 //display count stats and option to pull back more search results
 function updateFooter(data, searchParams) {
-    var returnedCount = data.Search.length;
-    var totalSearchResultsCount = parseInt(data.totalResults);
+    //default to the search being a specific title search which returns a single result
+    var returnedCount = 1;
+    var totalSearchResultsCount = 1;
+
+    //if this was a broad search
+    if(data.Search) {
+        returnedCount = data.Search.length;
+        totalSearchResultsCount = parseInt(data.totalResults);
+    }
 
     //display current count by adding to previous
     var cc = $('#current-count');
@@ -327,7 +339,11 @@ function onMovieDetailsResponse(data, el) {
     //console.log(data);
     
     if(!data.Response || data.Response !== "True") {
-        console.log("Failed to get movie info");
+        if(data.Error) {
+            alert("Failed to get movie details: " + data.Error);
+        } else {
+            alert("Failed to get movie details: unknown response received")
+        }
         return;
     }
     
