@@ -101,11 +101,11 @@ function displayMovieDetails(element) {
     alert(element);
     getMovieDetails();
 }
-function getMovieDetails() {
-    var endpoint = 'http://www.omdbapi.com/';
+//Handles the ajax call
+function getMovieDetails(element) {
     var apiKey = 'd0507337';
-    var searchParams = "tt4154756";
-    /*
+    var endpoint = 'http://www.omdbapi.com/?apikey=' + apiKey;
+    var searchParams = "i=tt4154756";
     $.ajax({
         url: endpoint,
         data: searchParams,
@@ -114,16 +114,20 @@ function getMovieDetails() {
                 searchError.html("Error: Daily request limit reached!");
             }
         },
-        success: function(returnedData) {
-            console.log(returnedData);
+        success: function(returnedData,element) {
+            //console.log(returnedData);
+            addMovieDetails(returnedData);
         },
         complete: function () {
             //re-enable search button
-            $(searchButton).prop('disabled', false);
         },
         error: function() {
             searchError.html("Error: OMDB request failed");
+            console.log("Error: OMDB request failed");
         }
     });
-    */
+}
+function addMovieDetails(data,element) {
+    console.log("Add Movie Details");
+    console.log(data);
 }
