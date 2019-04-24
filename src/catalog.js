@@ -65,10 +65,8 @@ function displayCatalog(catalogPromiseArray) {
 
             //add a click listener to toggle the sub-container's visibility
             movieContentsDiv.on("click", function(event) {
-                //find the sub-container containing the plot
-                var container = $(event.target);
-                //toggle its visibility
-                container.children(".movie-details-container").toggle('slow');
+                //toggle sub-container's visibility
+                $(this).children(".movie-details-container").toggle('slow');
             });
 
             //add the movie contents to the root container
