@@ -35,83 +35,44 @@ function performFilterCatalog() {
     displayCatalog(exclusiveFilter(getWholeCatalog('asc')));
 }
 
-//TODO make functions for each filter to get the filtered catalog and display it
 //takes the catalog of movie information and displays them to the user in a list
 function displayCatalog(catalogPromiseArray) {
+    //container listing all the movies
+    var container = $( "#movie-listing-container" );
+
     //clear out all the currently displayed movies
-    $( "#movie-listing-container" ).empty();
-    //console.log(catArray);
-    catalogPromiseArray.then(function(catArray){
-        var listBuilder;
-        for(var i = 0; i < catArray.length; i++) {
-            for(var key in catArray[i]) {
-                //listBuilder = (' <div class="squareImage" style="background-image: url(\'' + catArray[i]['Poster'] + ' \');"> ');
-                listBuilder = (' <div class="square-content-container" style="background: #282828" onclick="displayMovieDetails(this)" imdbID=" ' + catArray[i]['imdbID'] + ' ">');
-                listBuilder += (' <p> ' + catArray[i]['Title']+ ' </p>');
-                listBuilder += (' <img src=" ' + catArray[i]['Poster'] + ' "/> ');
-                listBuilder += (' <p> ' + catArray[i]['Year']+ ' </p>');
-                listBuilder += (' <div class="movie-details-container"></div>');
-                listBuilder += (' </div> ');
-            }
-            //console.log(listBuilder);
-            $( "#movie-listing-container" ).append(listBuilder);
+    container.empty();
+    
+    catalogPromiseArray.then(function(movieList){
+        //iterate each movie in the list
+        for(var i = 0; i < movieList.length; i++) {
+            //act on the current movie
+            var movie = movieList[i];
+            //holds the movie's visible data
+            var movieContentsDiv = $('<div class="square-content-container" style="background: #282828">');
+            //add the visible data
+            movieContentsDiv.append($("<p>").text(movie['Title']));
+            movieContentsDiv.append($("<img>").attr('src', movie['Poster']));
+            movieContentsDiv.append($("<p>").text(movie['Year']));
+
+            //create a sub-container that holds the movie's plot text.
+            //it's hidden using 'style' to align with jquery's toggle() functionality
+            var details = $("<div class='movie-details-container' style='display: none;'>");
+            details.append(movie['Plot']);
+
+            //attach the sub-container
+            movieContentsDiv.append(details);
+
+            //add a click listener to toggle the sub-container's visibility
+            movieContentsDiv.on("click", function(event) {
+                //find the sub-container containing the plot
+                var container = $(event.target);
+                //toggle its visibility
+                container.children(".movie-details-container").toggle('slow');
+            });
+
+            //add the movie contents to the root container
+            container.append(movieContentsDiv);
         }
     });
-}
-//Gets the event object whenever a movie is clicked
-function displayMovieDetails(element) {
-    //alert(element);
-    getMovieDetails(element);
-}
-//displays a movie's details when its image is clicked
-function getMovieDetails(element) {
-    //TODO avoid an API call; instead use the existing details stored in an attribute
-    var apiKey = 'd0507337';
-    var endpoint = 'https://www.omdbapi.com/?apikey=' + apiKey;
-    var searchParams = "i=" + element.getAttribute("imdbID");
-    $.ajax({
-        url: endpoint,
-        data: searchParams,
-        statusCode: {
-            401: function () {
-                searchError.html("Error: Daily request limit reached!");
-            }
-        },
-        success: function(returnedData) {
-            //console.log(returnedData);
-            addMovieDetails(returnedData,element);
-        },
-        complete: function () {
-            //re-enable search button
-        },
-        error: function() {
-            searchError.html("Error: OMDB request failed");
-            console.log("Error: OMDB request failed");
-        }
-    });
-}
-function addMovieDetails(data,element) {
-    var detailsSection = element.querySelector('.movie-details-container');
-    //console.log(element);
-
-    if(detailsSection.innerHTML == "")
-    {
-        element.querySelector('.movie-details-container').append(data['Plot']);
-        //detailsSection.disabled = false;
-    }
-    else {
-        detailsSection.innerHTML = "";
-        detailsSection.disabled = true;
-        //detailsSection.empty();
-    }
-
-    //detailsSection.append(data['Plot']);
-    /*
-    var detailsBuilder;
-    detailsBuilder = ('<div class="movie-details">');
-    detailsBuilder += ('<p>' + data['Plot'] + '</p>');
-    detailsBuilder += ('</div>');
-    console.log(data);
-    console.log(element);
-    */
 }
