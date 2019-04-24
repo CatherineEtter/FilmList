@@ -8,9 +8,24 @@ function displayUnfilteredQueue() {
     displayQueue(queuePromise);
 }
 
+//called when the user clicks the Filter Catalog button
+function performTitleSearch() {
+    if(mustLoginToContinue()) return;
+
+    displayQueue(titleSearch(getWholeQueue('asc')));
+}
+
+//called when the user clicks the button to search by title
+function performFilterQueue() {
+    if(mustLoginToContinue()) return;
+    
+    displayQueue(exclusiveFilter(getWholeQueue('asc')));
+}
+
 //TODO make functions for each filter to get the filtered queue and display it
 //takes the queue of movie information and displays them to the user in a list
 function displayQueue(queuePromiseArray) {
+    //clear out all the currently displayed movies
     $( "#movie-listing-container" ).empty();
     //console.log(catArray);
     queuePromiseArray.then(function(catArray) {
@@ -25,7 +40,7 @@ function displayQueue(queuePromiseArray) {
                 listBuilder += (' <div class="movie-details-container"></div>');
                 listBuilder += (' </div> ');
             }
-            console.log(listBuilder);
+            //console.log(listBuilder);
             $( "#movie-listing-container" ).append(listBuilder);
         }
     });
@@ -36,8 +51,9 @@ function displayMovieDetails(element) {
     getMovieDetails(element);
 }
 
-//Handles the ajax call
+//displays a movie's details when its image is clicked
 function getMovieDetails(element) {
+    //TODO avoid an API call; instead use the existing details stored in an attribute
     var apiKey = 'd0507337';
     var endpoint = 'https://www.omdbapi.com/?apikey=' + apiKey;
     var searchParams = "i=" + element.getAttribute("imdbID");
@@ -65,7 +81,7 @@ function getMovieDetails(element) {
 
 function addMovieDetails(data,element) {
     var detailsSection = element.querySelector('.movie-details-container');
-    console.log(element);
+    //console.log(element);
 
     if(detailsSection.innerHTML == "")
     {

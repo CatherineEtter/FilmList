@@ -1,3 +1,12 @@
+/**
+ * filmlist.js
+ * FilmList Project
+ * Software Engineering Class
+ * Teacher: Carol Redfield
+ * Programmers: Richard, Matt, Jeremy, Catherine, Colin, Manny
+ * This file contains functions that are common to every page.
+ */
+
 function openLoginForm() {
     //clear any lingering error messages
     $("#login-error").text();
@@ -45,13 +54,13 @@ function initializeFirebase(onStateChangedCallback) {
     firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
             //User is signed in
-            console.log("Current User (filmlist.js): " + user);
+            //console.log("Current User (filmlist.js): " + user);
             //currentUser = user;
-            console.log("displayName: " + user.displayName);
-            console.log("email: " + user.email);
-            console.log("photoUrl: " + user.photoUrl);
-            console.log("emailVerified: " + user.emailVerified);
-            console.log("uid: " + user.uid);
+            //console.log("displayName: " + user.displayName);
+            //console.log("email: " + user.email);
+            //console.log("photoUrl: " + user.photoUrl);
+            //console.log("emailVerified: " + user.emailVerified);
+            //console.log("uid: " + user.uid);
             setUserProfile(user);
     
             //user may have come in via registration modal, so hide it
@@ -92,24 +101,31 @@ function refreshAccountNavigation() {
 function catalogCID(){
     var db = firebase.firestore();
     var users = db.collection("users");
-    if(firebase.auth().currentUser != null){
-        var collectionId = "users/"+firebase.auth().currentUser.uid+"/catalog";
-        return db.collection(collectionId);
-    }else{
-        alert("Can't access database, please log in.");
-        return null;
-    }
+    
+    var collectionId = "users/"+firebase.auth().currentUser.uid+"/catalog";
+    return db.collection(collectionId);
 }
 
 //returns the queue collection ID
 function queueCID(){
     var db = firebase.firestore();
     var users = db.collection("users");
-    if(firebase.auth().currentUser != null){
-        var collectionId = "users/"+firebase.auth().currentUser.uid+"/queue";
-        return db.collection(collectionId);
-    }else{
-        alert("Can't access database, please log in.");
-        return null;
+
+    var collectionId = "users/"+firebase.auth().currentUser.uid+"/queue";
+    return db.collection(collectionId);
+}
+
+/*
+The purpose of this function is to avoid database calls when the user has yet to login.
+Call this at the beginning of a click handler. If the user is logged in, this returns false.
+If the user is not logged in, the Login form is displayed and this returns true.
+*/
+function mustLoginToContinue() {
+    //"currentUser" only exists when the user is logged in
+    if(firebase.auth().currentUser) {
+        return false;
+    } else {
+        openLoginForm();
+        return true;
     }
 }

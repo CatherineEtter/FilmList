@@ -21,9 +21,24 @@ function displayUnfilteredCatalog() {
     displayCatalog(catalogPromise);
 }
 
+//called when the user clicks the Filter Catalog button
+function performTitleSearch() {
+    if(mustLoginToContinue()) return;
+
+    displayCatalog(titleSearch(getWholeCatalog('asc')));
+}
+
+//called when the user clicks the button to search by title
+function performFilterCatalog() {
+    if(mustLoginToContinue()) return;
+    
+    displayCatalog(exclusiveFilter(getWholeCatalog('asc')));
+}
+
 //TODO make functions for each filter to get the filtered catalog and display it
 //takes the catalog of movie information and displays them to the user in a list
 function displayCatalog(catalogPromiseArray) {
+    //clear out all the currently displayed movies
     $( "#movie-listing-container" ).empty();
     //console.log(catArray);
     catalogPromiseArray.then(function(catArray){
@@ -48,8 +63,9 @@ function displayMovieDetails(element) {
     //alert(element);
     getMovieDetails(element);
 }
-//Handles the ajax call
+//displays a movie's details when its image is clicked
 function getMovieDetails(element) {
+    //TODO avoid an API call; instead use the existing details stored in an attribute
     var apiKey = 'd0507337';
     var endpoint = 'https://www.omdbapi.com/?apikey=' + apiKey;
     var searchParams = "i=" + element.getAttribute("imdbID");
@@ -76,7 +92,7 @@ function getMovieDetails(element) {
 }
 function addMovieDetails(data,element) {
     var detailsSection = element.querySelector('.movie-details-container');
-    console.log(element);
+    //console.log(element);
 
     if(detailsSection.innerHTML == "")
     {

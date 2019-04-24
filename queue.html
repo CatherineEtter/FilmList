@@ -71,9 +71,8 @@
                 <div class="search-wrapper">
                     <form>
                         <input type="text" name="movie-search" placeholder="Search for a title..." id="searchbar">
-                        <!--TODO: Replace "Search" with a search icon instead-->
                         <button type="button" id="btn-collapse-filter" class="btn btn-secondary" data-toggle="collapse" data-target="#movie-filter-box"><i class="fas fa-sort-down"></i></button>
-                        <button type="submit" class="btn btn-secondary" onclick="displayQueue(titleSearch(getWholeQueue('asc'))); return false;"><i class="fas fa-search"></i></button>
+                        <button type="submit" class="btn btn-secondary" onclick="performTitleSearch(); return false;"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
                 <div id="movie-filter-box" class="collapse">
@@ -112,14 +111,13 @@
                                 <option>Western</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-secondary" onclick="displayQueue(exclusiveFilter(getWholeQueue('asc'))); return false;">Filter Queue</button>
+                        <button type="submit" class="btn btn-secondary" onclick="performFilterQueue(); return false;">Filter Queue</button>
                         <button type="reset" class="btn btn-secondary">Reset Filters</button>
                     </form>
                 </div>
             </div>
             <div id="movie-listing-container">
             </div>
-            <!--<button class="btn btn-primary" type="button" onclick="displayUnfilteredQueue();">GET THE QUEUE</button>-->
         </div>
         <footer id="footer">
             <p>St. Mary's University Software Engineering Project, Spring 2019</p>
@@ -142,6 +140,9 @@
                     <div class="form-group">
                         <input class="form-control" type="password" placeholder="Password" name="password"
                             id="passwordInput">
+                    </div>
+                    <div class="form-group" style="text-align: right; font-size: small;">
+                        <span style="padding-right: 5px;">Need an account?</span><a href="#" onclick="closeLoginForm();openRegisterForm();">Register</a>
                     </div>
                     <button class="btn btn-success" type="submit" onclick="loginUser()">Login</button>
                     <button class="btn btn-secondary" onclick="closeLoginForm()">Close</button>
@@ -169,6 +170,9 @@
                         <input class="form-control" type="password" placeholder="Enter Password Again" name="password"
                             id="pass_field2">
                     </div>
+                    <div class="form-group" style="text-align: right; font-size: small;">
+                            <span style="padding-right: 5px;">Already registered?</span><a href="#" onclick="closeRegisterForm();openLoginForm();">Login</a>
+                        </div>
                     <button class="btn btn-success" type="button" onclick="RegisterForm();">Register</button>
                     <button class="btn btn-secondary" type="button" onclick="closeRegisterForm();">Close</button>
                 </div>

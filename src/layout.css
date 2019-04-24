@@ -236,3 +236,7 @@ width: 40%;
     height: 250px;
     width: 150px;
 }
+/* for decorating error messages */
+.error {
+    color: crimson;
+}

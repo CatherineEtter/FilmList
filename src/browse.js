@@ -20,6 +20,11 @@ var DEFAULT_MOVIE_IMAGE = 'https://m.media-amazon.com/images/G/01/imdb/images/no
 //custom attribute where we keep the vital movie details
 var MOVIE_DETAILS_ATTR_KEY = "data-imdb-details";
 
+//this is a local cache of the user's movie info.
+//its key is an imdbID
+//its value is the name of the list it's in - either 'catalog' or 'queue'
+var movieStates = {}
+
 //executes a new movie search. if the search term is emptym
 //an error is displayed and the OMDB call is avoided.
 //searchType is inculded to account for "too many results" errors
@@ -434,12 +439,15 @@ function resizeImageTo(src, newHeight) {
     return src.replace('SX300.','SX'+newHeight+'.');
 }
 
-//does the folowing:
+//does the following:
 //add the specified movie to the user's catalog
 //remove the movie from the user's queue
 //updates the catalog button's text and click handler
 //updates the queue button's text and click handler
+//add the movie to movieStates
 function addToCatalog(el){
+    if(mustLoginToContinue()) return;
+
     var button = $(el);
     var table = button.parents("table")[0];
     addMovieToDocStore(table, catalogCID(), 'catalog');
@@ -448,12 +456,15 @@ function addToCatalog(el){
     updateQueueButton(button.siblings(), false);
 }
 
-//does the folowing:
+//does the following:
 //add the specified movie to the user's queue
 //remove the movie from the user's catalog
 //updates the queue button's text and click handler
 //updates the catalog button's text and click handler
+//add the movie to movieStates
 function addToQueue(el) {
+    if(mustLoginToContinue()) return;
+
     var button = $(el);
     var table = button.parents("table")[0];
     addMovieToDocStore(table, queueCID(), 'queue');
@@ -531,7 +542,13 @@ function removeMovieFromDocStore(el, collection) {
     return docId;
 }
 
+//does the following:
+//removes the specified movie from the user's catalog
+//updates the catalog button's text and click handler
+//remove the movie from movieStates
 function removeFromCatalog(el) {
+    if(mustLoginToContinue()) return;
+
     var button = $(el);
     var table = button.parents("table")[0];
     var docId = removeMovieFromDocStore(table, catalogCID());
@@ -539,15 +556,19 @@ function removeFromCatalog(el) {
     updateCatalogButton(button, false);
 }
 
+//does the following:
+//removes the specified movie from the user's queue
+//updates the queue button's text and click handler
+//remove the movie from movieStates
 function removeFromQueue(el) {
+    if(mustLoginToContinue()) return;
+
     var button = $(el);
     var table = button.parents("table")[0];
     var docId = removeMovieFromDocStore(table, queueCID());
     delete movieStates[[docId]];
     updateQueueButton(button, false);
 }
-
-var movieStates = {}
 
 function loadMovieStatesForBrowseTab() {
     if(firebase.auth().currentUser){
