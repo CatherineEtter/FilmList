@@ -240,3 +240,7 @@ width: 40%;
 .error {
     color: crimson;
 }
+/* notifies users an action is tied to clicking an image */
+.movie-details-image {
+    cursor: pointer;
+}

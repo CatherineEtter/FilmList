@@ -14,9 +14,6 @@
 var endpoint = 'https://www.omdbapi.com/';
 var apiKey = 'd0507337';
 
-//TODO current 32x44 is too small
-var DEFAULT_MOVIE_IMAGE = 'https://m.media-amazon.com/images/G/01/imdb/images/nopicture/32x44/film-3119741174._CB483525279_.png';
-
 //custom attribute where we keep the vital movie details
 var MOVIE_DETAILS_ATTR_KEY = "data-imdb-details";
 
@@ -108,8 +105,6 @@ function searchForMovie(searchParams, isNewSearch) {
 //"searchParams" are what was sent to OMDB. can be reused
 //to query for the next page of search results.
 function onMovieSearchResponse(data, searchParams) {
-    console.log(data);
-
     //marks if OMDB found the search term to be valid
     if(data.Response && data.Response === "True") {
         //console.log("Creating " + data.Search.length + " rows for the total " + data.totalResults);
@@ -401,12 +396,12 @@ function onMovieDetailsResponse(data, el) {
     var div = $("<div class='movie-details-button-container'>").appendTo($("<td>").appendTo(row));
     //first is the catalog button
     var catalogBtn = $("<button class='btn btn-primary btn-search-result-action'>");
-    updateCatalogButton(catalogBtn, movieStates[data.imdbID] == 'catalog');
+    updateCatalogButton(catalogBtn, movieStates[data.imdbID] == CATALOG_COLLECTION_KEY);
     
     div.append(catalogBtn);
     //next is the queue button
     var queueBtn = $("<button class='btn btn-primary btn-search-result-action'>");
-    updateQueueButton(queueBtn, movieStates[data.imdbID] == 'queue');
+    updateQueueButton(queueBtn, movieStates[data.imdbID] == QUEUE_COLLECTION_KEY);
 
     div.append(queueBtn);
     
@@ -450,8 +445,8 @@ function addToCatalog(el){
 
     var button = $(el);
     var table = button.parents("table")[0];
-    addMovieToDocStore(table, catalogCID(), 'catalog');
-    removeMovieFromDocStore(table, queueCID());
+    addMovieToDocStore(table, getCollectionByName(CATALOG_COLLECTION_KEY), CATALOG_COLLECTION_KEY);
+    removeMovieFromDocStore(table, getCollectionByName(QUEUE_COLLECTION_KEY));
     updateCatalogButton(button, true);
     updateQueueButton(button.siblings(), false);
 }
@@ -467,8 +462,8 @@ function addToQueue(el) {
 
     var button = $(el);
     var table = button.parents("table")[0];
-    addMovieToDocStore(table, queueCID(), 'queue');
-    removeMovieFromDocStore(table, catalogCID());
+    addMovieToDocStore(table, getCollectionByName(QUEUE_COLLECTION_KEY), QUEUE_COLLECTION_KEY);
+    removeMovieFromDocStore(table, getCollectionByName(CATALOG_COLLECTION_KEY));
     updateQueueButton(button, true);
     updateCatalogButton(button.siblings(), false);
 }
@@ -492,14 +487,6 @@ function addMovieToDocStore(el, collection, collectionName) {
 
         if (doc.exists) {
             console.log("Document exists on add, updating");
-            //Saving just in case. For single collection state checking.
-            /*//      if current state of the document is catalog and the incoming state is queue
-            //OR    if current state of the document is queue and the incoming state is catalog
-            //OR    if current state of the document is already both
-            if((dataState == "catalog" && state == "queue") || (dataState == "queue" && state == "catalog") || (dataState == "both")){
-                console.log("Updating to \"both\"");
-                data['state'] = "both"
-            }*/
             collection.doc(docId).update(data);
         } else {
             console.log("No such document on add, creating default");
@@ -513,31 +500,18 @@ function addMovieToDocStore(el, collection, collectionName) {
     movieStates[[docId]] = collectionName;
 }
 
+/**
+Deletes the associated movie within firebase.
+
+@param el: the element having the movie detail attributes
+@param collection: the firebase collection to delete from
+@returns the docId/imdbID of the deleted movie
+*/
 function removeMovieFromDocStore(el, collection) {
     var data = JSON.parse(el.getAttribute(MOVIE_DETAILS_ATTR_KEY));
     var docId = data.imdbID;
 
-    console.log("Removing movie " + docId + " from doc store " + collection.path);
-
-    collection.doc(docId).get().then(function(doc) {
-        if (doc.exists) {
-            console.log("Document exists on remove, deleting");
-            //Saving just in case. For single collection state checking.
-            /*//      if current state of the document is catalog and the incoming state is queue
-            //OR    if current state of the document is queue and the incoming state is catalog
-            //OR    if current state of the document is already both
-            if((dataState == "catalog" && state == "queue") || (dataState == "queue" && state == "catalog") || (dataState == "both")){
-                console.log("Updating to \"both\"");
-                data['state'] = "both"
-            }*/
-            collection.doc(docId).delete();
-        } else {
-            console.log("No such document on remove, doing nothing");
-        }
-    }).catch(function(error) {
-        console.log("Error removing movie from doc store:"+docId, error);
-        alert("Can't remove " + data['Title'] + " to " + collectionName + " database.");
-    });
+    deleteMovieFromDocStore(docId, collection);
 
     return docId;
 }
@@ -551,7 +525,7 @@ function removeFromCatalog(el) {
 
     var button = $(el);
     var table = button.parents("table")[0];
-    var docId = removeMovieFromDocStore(table, catalogCID());
+    var docId = removeMovieFromDocStore(table, getCollectionByName(CATALOG_COLLECTION_KEY));
     delete movieStates[[docId]];
     updateCatalogButton(button, false);
 }
@@ -565,15 +539,15 @@ function removeFromQueue(el) {
 
     var button = $(el);
     var table = button.parents("table")[0];
-    var docId = removeMovieFromDocStore(table, queueCID());
+    var docId = removeMovieFromDocStore(table, getCollectionByName(QUEUE_COLLECTION_KEY));
     delete movieStates[[docId]];
     updateQueueButton(button, false);
 }
 
 function loadMovieStatesForBrowseTab() {
     if(firebase.auth().currentUser){
-        loadMovieStates(catalogCID(), 'catalog');
-        loadMovieStates(queueCID(), 'queue');
+        loadMovieStates(getCollectionByName(CATALOG_COLLECTION_KEY), CATALOG_COLLECTION_KEY);
+        loadMovieStates(getCollectionByName(QUEUE_COLLECTION_KEY), QUEUE_COLLECTION_KEY);
     }
 }
 

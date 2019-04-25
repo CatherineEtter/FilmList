@@ -7,6 +7,14 @@
  * This file contains functions that are common to every page.
  */
 
+ //TODO current 32x44 is too small
+var DEFAULT_MOVIE_IMAGE = 'https://m.media-amazon.com/images/G/01/imdb/images/nopicture/32x44/film-3119741174._CB483525279_.png';
+
+//the key under which a user's Catalog is stored within firebase
+var CATALOG_COLLECTION_KEY = 'catalog';
+//the key under which a user's Queue is stored within firebase
+var QUEUE_COLLECTION_KEY = 'queue';
+
 function openLoginForm() {
     //clear any lingering error messages
     $("#login-error").text();
@@ -62,9 +70,6 @@ function initializeFirebase(onStateChangedCallback) {
             //console.log("emailVerified: " + user.emailVerified);
             //console.log("uid: " + user.uid);
             setUserProfile(user);
-    
-            //user may have come in via registration modal, so hide it
-            closeRegisterForm();
         } else {
             //No user is signed in
         }
@@ -97,21 +102,17 @@ function refreshAccountNavigation() {
     }
 }
 
-//returns the catalog collection ID
-function catalogCID(){
-    var db = firebase.firestore();
-    var users = db.collection("users");
-    
-    var collectionId = "users/"+firebase.auth().currentUser.uid+"/catalog";
-    return db.collection(collectionId);
-}
-
-//returns the queue collection ID
-function queueCID(){
+/**
+ * Get the specified firebase collection
+ * 
+ * @param collectionName name of collection to return
+ * @returns a firebase collection object
+ */
+function getCollectionByName(collectionName) {
     var db = firebase.firestore();
     var users = db.collection("users");
 
-    var collectionId = "users/"+firebase.auth().currentUser.uid+"/queue";
+    var collectionId = "users/"+firebase.auth().currentUser.uid+"/" +collectionName;
     return db.collection(collectionId);
 }
 
@@ -128,4 +129,20 @@ function mustLoginToContinue() {
         openLoginForm();
         return true;
     }
+}
+//delete the specified movie from the specified collection
+function deleteMovieFromDocStore(imdbID, collection) {
+    console.log("Removing movie " + imdbID + " from doc store " + collection.path);
+
+    collection.doc(imdbID).get().then(function(doc) {
+        if (doc.exists) {
+            console.log("Document exists on remove, deleting");
+            collection.doc(imdbID).delete();
+        } else {
+            console.log("No such document on remove, doing nothing");
+        }
+    }).catch(function(error) {
+        console.log("Error removing movie from doc store:"+imdbID, error);
+        alert("Can't remove " + imdbID + " from " + collectionName + " collection.");
+    });
 }

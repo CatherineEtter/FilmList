@@ -23,13 +23,14 @@
         <script type="text/javascript" src="src/login.js"></script>
         <script type="text/javascript" src="src/account.js"></script>
         <script type="text/javascript" src="src/filter.js"></script>
-        <script type="text/javascript" src="src/catalog.js"></script>
+        <script type="text/javascript" src="src/collections.js"></script>
         <script type="text/javascript">
             $().ready(function() {
+                activeCollectionName = CATALOG_COLLECTION_KEY;
                 initializeFirebase(function() {
                     refreshAccountNavigation();
                     if (firebase.auth().currentUser) {
-                        displayUnfilteredCatalog();
+                        displayUnfilteredCollection();
                     }
                 });
             });
@@ -111,7 +112,7 @@
                                 <option>Western</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-secondary" onclick="performFilterCatalog(); return false;">Filter Catalog</button>
+                        <button type="submit" class="btn btn-secondary" onclick="performFilter(); return false;">Filter Catalog</button>
                         <button type="reset" class="btn btn-secondary">Reset Filters</button>
                     </form>
                 </div>
