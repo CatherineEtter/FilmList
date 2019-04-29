@@ -77,7 +77,7 @@ function displayCollection(collectionPromise) {
             //add a click listener to toggle the sub-container's visibility
             img.on("click", function(event) {
                 //toggle sub-container's visibility
-                $(this).siblings(".movie-details-container").toggle('slow');
+                $(this).siblings(".movie-details-container").toggle('medium');
             });
             movieContentsDiv.append(img);
 
@@ -92,12 +92,17 @@ function displayCollection(collectionPromise) {
             removeButton.on('click', function(event) {
                 removeMovieFromCollection(event);
             });
-            movieContentsDiv.append(removeButton);
 
             //create a sub-container that holds the movie's plot text.
             //it's hidden using 'style' to align with jquery's toggle() functionality
             var details = $("<div class='movie-details-container' style='display: none;'>");
-            details.append(movie['Plot']);
+            var plot = $("<div style='width:100%;height:7em;line-height:1.5em;overflow:auto;padding:5px;'>"+ movie['Plot'] +"'</div>'")
+            details.append(plot);
+            details.append("<br>Actors: " + movie['Actors'].join(', '));
+            details.append("<br><br>Director: " + movie['Director']);
+            details.append("<br><br>Genre(s): " + movie['Genre'].join(', '));
+            details.append("<br><br>IMDB Rating: " + movie['imdbRating'] + "<br>");
+            details.append(removeButton);
             //attach the sub-container
             movieContentsDiv.append(details);
 
