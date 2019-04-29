@@ -22,7 +22,7 @@ function titleSearch(promiseArray){
 
 /**
  * Filters the given array of movies based on the filter fields on the queue and catalog .html pages
- * 
+ *  
  * @param {*} promiseArray Promise that contains an array of movies, produced through arrayify()
  */
 function exclusiveFilter(promiseArray){

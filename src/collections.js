@@ -62,7 +62,7 @@ function displayCollection(collectionPromise) {
             //act on the current movie
             var movie = movieList[i];
             //holds the movie's visible data
-            var movieContentsDiv = $('<div class="square-content-container" style="background: #282828">');
+            var movieContentsDiv = $('<div id="movie-'+ movie['imdbID'] +'" class="square-content-container" style="background: #282828">');
 
             //begin adding the visible data
 
@@ -135,4 +135,7 @@ function removeMovieFromCollection(event, imdbID) {
         //remove the DIV from the DOM
         movieContentsDiv.remove();
     });
+
+    //removes the movie from the website display.
+    $("#movie-"+imdbID).remove();
 }
