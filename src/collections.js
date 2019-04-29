@@ -19,7 +19,10 @@ var activeCollectionName = 'set-me';
  */
 function getWholeCollectionOrderedBy(order){
     var collection = getCollectionByName(activeCollectionName);
-    return arrayify(collection.orderBy("TimeAdded", order));
+    if (activeCollectionName == QUEUE_COLLECTION_KEY)
+        return arrayify(collection.orderBy("TimeAdded", order));
+    if (activeCollectionName == CATALOG_COLLECTION_KEY)
+        return arrayify(collection.orderBy("Title", order))
 }
 
 function displayUnfilteredCollection() {
