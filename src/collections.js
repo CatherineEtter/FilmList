@@ -86,11 +86,12 @@ function displayCollection(collectionPromise) {
 
             //append a button to remove the movie from the list
             var removeButton = $("<button class='btn btn-primary btn-search-result-action'>").text(removeButtonText);
-            //TODO find a cleaner way to get the imdbID into the click handler
-            removeButton.attr("attr-imdb-id", movie['imdbID']);
+            //'let' is block scoped, so we pass its current value to removeMovieFromCollection().
+            //using 'var' would use the last accessed value from the looped array, which is an error.
+            let imdbID = movie['imdbID'];
             //handle the user's request to remove the movie
             removeButton.on('click', function(event) {
-                removeMovieFromCollection(event);
+                removeMovieFromCollection(event, imdbID);
             });
 
             //create a sub-container that holds the movie's plot text.
@@ -120,9 +121,6 @@ and remove its info from the display list.
 function removeMovieFromCollection(event, imdbID) {
     //get the button that was clicked
     var button = $(event.target);
-
-    //pull the correct imdbID for this button
-    var imdbID = button.attr("attr-imdb-id");
 
     console.log("removing " + imdbID + " from " + activeCollectionName);
 
