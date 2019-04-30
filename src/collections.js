@@ -65,7 +65,7 @@ function displayCollection(collectionPromise) {
             //act on the current movie
             var movie = movieList[i];
             //holds the movie's visible data
-            var movieContentsDiv = $('<div id="movie-'+ movie['imdbID'] +'" class="square-content-container" style="background: #282828">');
+            var movieContentsDiv = $('<div class="square-content-container" style="background: #282828">');
 
             //begin adding the visible data
 
@@ -105,10 +105,11 @@ function displayCollection(collectionPromise) {
             details.append("<br>Actors: " + movie['Actors'].join(', '));
             details.append("<br><br>Director: " + movie['Director']);
             details.append("<br><br>Genre(s): " + movie['Genre'].join(', '));
-            details.append("<br><br>IMDB Rating: " + movie['imdbRating'] + "<br>");
-            details.append(removeButton);
+            details.append("<br><br>IMDB Rating: " + movie['imdbRating'] + "<br><br>");
+
             //attach the sub-container
             movieContentsDiv.append(details);
+            movieContentsDiv.append(removeButton);
 
             //add the movie contents to the root container
             container.append(movieContentsDiv);
@@ -136,7 +137,4 @@ function removeMovieFromCollection(event, imdbID) {
         //remove the DIV from the DOM
         movieContentsDiv.remove();
     });
-
-    //removes the movie from the website display.
-    $("#movie-"+imdbID).remove();
 }
