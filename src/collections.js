@@ -111,6 +111,19 @@ function displayCollection(collectionPromise) {
             movieContentsDiv.append(details);
             movieContentsDiv.append(removeButton);
 
+            if(activeCollectionName == QUEUE_COLLECTION_KEY){
+                //button for moving movies from queue to catalog
+                var queueToCatalogButton = $("<button class='btn btn-primary btn-search-result-action'>").text('Move to Catalog');
+                //'let' is block scoped, so we pass its current value to removeMovieFromCollection().
+                //using 'var' would use the last accessed value from the looped array, which is an error.
+                let imdbID = movie['imdbID'];
+                //handle the user's request to remove the movie
+                queueToCatalogButton.on('click', function(event) {
+                    queueToCatalog(event, imdbID);
+                });
+                movieContentsDiv.append(queueToCatalogButton);
+            }
+
             //add the movie contents to the root container
             container.append(movieContentsDiv);
         }
@@ -137,4 +150,32 @@ function removeMovieFromCollection(event, imdbID) {
         //remove the DIV from the DOM
         movieContentsDiv.remove();
     });
+}
+
+function queueToCatalog(event, imdbID) {
+    //get the button that was clicked
+    var button = $(event.target);
+
+    console.log("moving " + imdbID + " from " + activeCollectionName + " to catalog.");
+    getCollectionByName(QUEUE_COLLECTION_KEY).doc(imdbID).get().then(function(queueDoc){
+        getCollectionByName(CATALOG_COLLECTION_KEY).doc(imdbID).get().then(function(catalogDoc) {
+            if (catalogDoc.exists) {
+                console.log("Document exists on add, updating");
+                getCollectionByName(CATALOG_COLLECTION_KEY).doc(imdbID).update(queueDoc.data());
+            } else {
+                console.log("No such document on add, creating default");
+                getCollectionByName(CATALOG_COLLECTION_KEY).doc(imdbID).set(queueDoc.data());
+            }
+        })
+    });
+    //deletes the movie within firebase
+    deleteMovieFromDocStore(imdbID, getCollectionByName(QUEUE_COLLECTION_KEY));
+
+    //hide the DIV, delete it when animation ends
+    var movieContentsDiv = button.parent(".square-content-container");
+    movieContentsDiv.hide('slow', function() {
+        //remove the DIV from the DOM
+        movieContentsDiv.remove();
+    });
+    console.log("we're here for some reason.")
 }
